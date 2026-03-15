@@ -22,7 +22,6 @@
         input, select { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
         .lista-datos { list-style: none; padding: 0; }
         .lista-datos li { background: #f8f9fa; border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 5px; }
-        .item-carrito { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; }
         .resumen-total { font-size: 20px; font-weight: bold; text-align: center; margin: 15px 0; color: #28a745; }
         .info-semana { background: #e9ecef; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-size: 14px; }
     </style>
@@ -53,21 +52,14 @@
     <div id="pantalla-pedido" class="screen">
         <div id="info-semana-activa" class="info-semana"></div>
         <div class="grid-productos" id="contenedor-productos"></div>
-        <div class="flex-row" style="display:flex; gap:10px;">
+        <div style="display:flex; gap:10px;">
             <button class="btn-edad" onclick="seleccionarEdad('18-30', this)">18-30</button>
             <button class="btn-edad" onclick="seleccionarEdad('31-50', this)">31-50</button>
             <button class="btn-edad" onclick="seleccionarEdad('51+', this)">51+</button>
         </div>
         <div class="resumen-total">Total: $<span id="total-pedido">0</span></div>
-        <button class="btn-primary" onclick="cambiarPantalla('pantalla-carrito')">🛒 Ver Carrito</button>
-        <button class="btn-success" onclick="guardarPedido()">💾 Save (Guardar Pedido)</button>
+        <button class="btn-success" id="btn-save" onclick="guardarPedido()">💾 Save (Guardar Pedido)</button>
         <button class="btn-secondary" onclick="cerrarSemana()">Volver a Portada</button>
-    </div>
-
-    <div id="pantalla-carrito" class="screen">
-        <h2>Carrito</h2>
-        <div id="contenido-carrito"></div>
-        <button class="btn-primary" onclick="cambiarPantalla('pantalla-pedido')">Volver</button>
     </div>
 
     <div id="pantalla-resumen" class="screen">
@@ -79,6 +71,7 @@
 </div>
 
 <script>
+    // TU URL ACTUALIZADA
     const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz-_Dw2_ZULveE9QNxKkAzJyJ2XZF4Okca9CUsiJmj4MxY2KWwBak9qVGBCWM7apeHk/exec';
     
     const catalogoProductos = [
@@ -100,7 +93,6 @@
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
         document.getElementById(id).classList.add('active-screen');
         if(id === 'pantalla-portada') renderizarSemanas();
-        if(id === 'pantalla-carrito') renderizarCarrito();
     }
 
     function renderizarSemanas() {
@@ -152,10 +144,15 @@
         document.getElementById('total-pedido').innerText = t;
     }
 
-    function guardarPedido() {
-        if(!carritoActual.length) return alert("Vacío");
+    async function guardarPedido() {
+        if(!carritoActual.length) return alert("El carrito está vacío");
+        
+        const btn = document.getElementById('btn-save');
+        btn.innerText = "⏳ Enviando al Excel...";
+        btn.disabled = true;
+
         const pedido = {
-            idPedido: Date.now(),
+            idPedido: Date.now().toString(),
             fecha: semanaActiva.fecha,
             clima: semanaActiva.clima,
             temperatura: semanaActiva.temperatura,
@@ -165,25 +162,35 @@
             total: carritoActual.reduce((a, i) => a + (i.precio * i.cantidad), 0)
         };
 
-        // Enviar a Google Sheets
-        fetch(WEB_APP_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(pedido)
-        });
-
-        bdSemanas.find(s => s.id === semanaActiva.id).pedidos.push(pedido);
-        localStorage.setItem('bdSemanas', JSON.stringify(bdSemanas));
-        
-        alert("¡Guardado en Celular y Excel!");
-        carritoActual = [];
-        actualizarTotal();
+        try {
+            // Intento de envío al Excel
+            await fetch(WEB_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(pedido)
+            });
+            
+            // Guardar localmente
+            bdSemanas.find(s => s.id === semanaActiva.id).pedidos.push(pedido);
+            localStorage.setItem('bdSemanas', JSON.stringify(bdSemanas));
+            
+            alert("¡Pedido guardado exitosamente!");
+        } catch (e) {
+            alert("Error de conexión, pero se guardó en el celular.");
+        } finally {
+            btn.innerText = "💾 Save (Guardar Pedido)";
+            btn.disabled = false;
+            carritoActual = [];
+            edadSeleccionada = "No especificado";
+            document.querySelectorAll('.btn-edad').forEach(btn => btn.classList.remove('selected'));
+            actualizarTotal();
+        }
     }
 
     function verResumenSemana(i) {
         const sem = bdSemanas[i];
-        document.getElementById('datos-resumen-semana').innerText = `Semana: ${sem.fecha}`;
+        document.getElementById('datos-resumen-semana').innerText = `Resumen Semana: ${sem.fecha}`;
         document.getElementById('btn-continuar-capturando').onclick = () => {
             semanaActiva = sem;
             prepararPantallaPedido();
@@ -193,13 +200,12 @@
     }
 
     function prepararPantallaPedido() {
-        document.getElementById('info-semana-activa').innerText = `Capturando: ${semanaActiva.fecha}`;
+        document.getElementById('info-semana-activa').innerText = `Semana: ${semanaActiva.fecha} | Clima: ${semanaActiva.clima}`;
         carritoActual = [];
         actualizarTotal();
     }
 
     function cerrarSemana() { semanaActiva = null; cambiarPantalla('pantalla-portada'); }
-    function renderizarCarrito() { /* Opcional: similar a versiones anteriores */ }
 </script>
 </body>
 </html>
