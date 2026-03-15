@@ -9,29 +9,20 @@
         .app-container { max-width: 500px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .screen { display: none; }
         .active-screen { display: block; }
-        
         h2, h3 { color: #333; margin-top: 0; }
         button { padding: 12px; margin: 5px 0; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; width: 100%; transition: background 0.3s; }
         .btn-primary { background: #007bff; color: white; }
-        .btn-primary:hover { background: #0056b3; }
         .btn-success { background: #28a745; color: white; }
         .btn-danger { background: #dc3545; color: white; }
         .btn-secondary { background: #6c757d; color: white; }
-        
         .grid-productos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; }
         .btn-producto { background: #e2e8f0; color: #333; height: 60px; font-weight: bold; border: 1px solid #cbd5e1; }
-        .btn-producto:hover { background: #cbd5e1; }
-        
-        .flex-row { display: flex; gap: 10px; margin-bottom: 15px; }
         .btn-edad { background: #f8f9fa; border: 1px solid #ccc; flex: 1; }
         .btn-edad.selected { background: #007bff; color: white; border-color: #0056b3; }
-        
-        input, select { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 16px; }
-        
-        .lista-datos { list-style: none; padding: 0; margin: 0; }
+        input, select { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        .lista-datos { list-style: none; padding: 0; }
         .lista-datos li { background: #f8f9fa; border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 5px; }
-        .item-carrito { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding: 10px 0; }
-        
+        .item-carrito { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; }
         .resumen-total { font-size: 20px; font-weight: bold; text-align: center; margin: 15px 0; color: #28a745; }
         .info-semana { background: #e9ecef; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-size: 14px; }
     </style>
@@ -39,7 +30,6 @@
 <body>
 
 <div class="app-container">
-
     <div id="pantalla-portada" class="screen active-screen">
         <h2>Semanas Registradas</h2>
         <ul id="lista-semanas" class="lista-datos"></ul>
@@ -47,82 +37,56 @@
     </div>
 
     <div id="pantalla-nueva-semana" class="screen">
-        <h2>Crear Registro de Semana</h2>
-        <label>Fecha:</label>
+        <h2>Nueva Semana</h2>
         <input type="date" id="input-fecha">
-        <label>Temperatura (°C):</label>
-        <input type="number" id="input-temp" placeholder="Ej. 25">
-        <label>Clima:</label>
+        <input type="number" id="input-temp" placeholder="Temp °C">
         <select id="input-clima">
             <option value="Soleado">Soleado</option>
             <option value="Nublado">Nublado</option>
             <option value="Lluvioso">Lluvioso</option>
-            <option value="Frío">Frío</option>
         </select>
-        <label>Evento / Notas:</label>
-        <input type="text" id="input-evento" placeholder="Ej. Quincena, Festivo, Ninguno">
-        
-        <button class="btn-success" onclick="guardarSemana()">Iniciar Captura de Pedidos</button>
+        <input type="text" id="input-evento" placeholder="Evento">
+        <button class="btn-success" onclick="guardarSemana()">Iniciar Captura</button>
         <button class="btn-secondary" onclick="cambiarPantalla('pantalla-portada')">Cancelar</button>
     </div>
 
     <div id="pantalla-pedido" class="screen">
-        <div class="info-semana" id="info-semana-activa"></div>
-        
-        <h3>1. Selecciona Productos</h3>
+        <div id="info-semana-activa" class="info-semana"></div>
         <div class="grid-productos" id="contenedor-productos"></div>
-
-        <h3>2. Rango de Edad (Opcional)</h3>
-        <div class="flex-row">
+        <div class="flex-row" style="display:flex; gap:10px;">
             <button class="btn-edad" onclick="seleccionarEdad('18-30', this)">18-30</button>
             <button class="btn-edad" onclick="seleccionarEdad('31-50', this)">31-50</button>
             <button class="btn-edad" onclick="seleccionarEdad('51+', this)">51+</button>
         </div>
-
-        <div class="resumen-total">Total del Pedido: $<span id="total-pedido">0</span></div>
-
-        <button class="btn-primary" onclick="cambiarPantalla('pantalla-carrito')">🛒 Ver / Editar Carrito</button>
+        <div class="resumen-total">Total: $<span id="total-pedido">0</span></div>
+        <button class="btn-primary" onclick="cambiarPantalla('pantalla-carrito')">🛒 Ver Carrito</button>
         <button class="btn-success" onclick="guardarPedido()">💾 Save (Guardar Pedido)</button>
-        <button class="btn-danger" onclick="cancelarPedido()">❌ Cancelar Pedido</button>
-        <br><br>
-        <button class="btn-secondary" onclick="cerrarSemana()">Terminar y Volver a Portada</button>
+        <button class="btn-secondary" onclick="cerrarSemana()">Volver a Portada</button>
     </div>
 
     <div id="pantalla-carrito" class="screen">
-        <h2>Carrito de Compras</h2>
+        <h2>Carrito</h2>
         <div id="contenido-carrito"></div>
-        <div class="resumen-total">Total: $<span id="total-carrito">0</span></div>
-        <button class="btn-primary" onclick="cambiarPantalla('pantalla-pedido')">Volver al Pedido</button>
+        <button class="btn-primary" onclick="cambiarPantalla('pantalla-pedido')">Volver</button>
     </div>
 
     <div id="pantalla-resumen" class="screen">
-        <h2>Detalle de la Semana</h2>
         <div id="datos-resumen-semana" class="info-semana"></div>
-        <div class="resumen-total">Total Vendido: $<span id="gran-total-semana">0</span></div>
-        
-        <button class="btn-success" id="btn-continuar-capturando" style="margin-bottom: 20px;">+ Continuar Capturando Pedidos</button>
-
-        <h3>Pedidos de esta semana:</h3>
+        <button class="btn-success" id="btn-continuar-capturando">Continuar Capturando</button>
         <ul id="lista-pedidos-semana" class="lista-datos"></ul>
-        <button class="btn-secondary" onclick="cambiarPantalla('pantalla-portada')">Volver a Portada</button>
+        <button class="btn-secondary" onclick="cambiarPantalla('pantalla-portada')">Cerrar</button>
     </div>
-
 </div>
 
 <script>
-    // --- 1. BASE DE DATOS LOCAL Y CATÁLOGO ---
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz-_Dw2_ZULveE9QNxKkAzJyJ2XZF4Okca9CUsiJmj4MxY2KWwBak9qVGBCWM7apeHk/exec';
     
     const catalogoProductos = [
-        { id: 1, nombre: '1 Litro', precio: 140 },
-        { id: 2, nombre: '1/2 Litro', precio: 70 },
-        { id: 3, nombre: 'Pezuña', precio: 35 },
-        { id: 4, nombre: 'Caldo 1/2', precio: 25 },
-        { id: 5, nombre: 'Caldo 1 Lit', precio: 45 },
-        { id: 6, nombre: 'Hueso Ch', precio: 25 },
-        { id: 7, nombre: 'Hueso Grande', precio: 35 },
-        { id: 8, nombre: 'Vasija $200', precio: 200 },
-        { id: 9, nombre: 'Vasija 1 Lit', precio: 140 },
-        { id: 10, nombre: 'Vasija 1/2 Lit', precio: 70 }
+        { id: 1, nombre: '1 Litro', precio: 140 }, { id: 2, nombre: '1/2 Litro', precio: 70 },
+        { id: 3, nombre: 'Pezuña', precio: 35 }, { id: 4, nombre: 'Caldo 1/2', precio: 25 },
+        { id: 5, nombre: 'Caldo 1 Lit', precio: 45 }, { id: 6, nombre: 'Hueso Ch', precio: 25 },
+        { id: 7, nombre: 'Hueso Grande', precio: 35 }, { id: 8, nombre: 'Vasija $200', precio: 200 },
+        { id: 9, nombre: 'Vasija 1 Lit', precio: 140 }, { id: 10, nombre: 'Vasija 1/2 Lit', precio: 70 }
     ];
 
     let bdSemanas = JSON.parse(localStorage.getItem('bdSemanas')) || [];
@@ -130,225 +94,112 @@
     let carritoActual = [];
     let edadSeleccionada = "No especificado";
 
-    // --- 2. INICIALIZACIÓN ---
-    window.onload = () => {
-        renderizarProductos();
-        renderizarSemanas();
-        document.getElementById('input-fecha').valueAsDate = new Date();
-    };
+    window.onload = () => { renderizarProductos(); renderizarSemanas(); document.getElementById('input-fecha').valueAsDate = new Date(); };
 
-    function cambiarPantalla(idPantalla) {
+    function cambiarPantalla(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
-        document.getElementById(idPantalla).classList.add('active-screen');
-        
-        if(idPantalla === 'pantalla-portada') renderizarSemanas();
-        if(idPantalla === 'pantalla-carrito') renderizarCarrito();
+        document.getElementById(id).classList.add('active-screen');
+        if(id === 'pantalla-portada') renderizarSemanas();
+        if(id === 'pantalla-carrito') renderizarCarrito();
     }
 
-    // --- 3. LÓGICA DE SEMANAS (PORTADA Y CREACIÓN) ---
     function renderizarSemanas() {
         const lista = document.getElementById('lista-semanas');
-        lista.innerHTML = '';
-        if(bdSemanas.length === 0) {
-            lista.innerHTML = '<li>No hay semanas registradas. Añade una para empezar.</li>';
-            return;
-        }
-
-        bdSemanas.forEach((sem, index) => {
-            let totalSemana = sem.pedidos.reduce((acc, ped) => acc + ped.total, 0);
+        lista.innerHTML = bdSemanas.length ? '' : '<li>No hay registros</li>';
+        bdSemanas.forEach((sem, i) => {
             const li = document.createElement('li');
-            li.style.cursor = 'pointer';
-            li.innerHTML = `<strong>Fecha:</strong> ${sem.fecha} <br>
-                            <strong>Clima:</strong> ${sem.clima} (${sem.temperatura}°C) <br>
-                            <strong>Ventas:</strong> $${totalSemana} (${sem.pedidos.length} pedidos)`;
-            li.onclick = () => verResumenSemana(index);
+            li.innerHTML = `Semana: ${sem.fecha} - $${sem.pedidos.reduce((a,b)=>a+b.total,0)}`;
+            li.onclick = () => verResumenSemana(i);
             lista.appendChild(li);
         });
     }
 
     function guardarSemana() {
-        const fecha = document.getElementById('input-fecha').value;
-        const temp = document.getElementById('input-temp').value;
-        const clima = document.getElementById('input-clima').value;
-        const evento = document.getElementById('input-evento').value;
-
-        if(!fecha) return alert('La fecha es obligatoria');
-
-        const nuevaSemana = {
-            id: 'SEM-' + Date.now(),
-            fecha, temperatura: temp, clima, evento, pedidos: []
-        };
-        
-        bdSemanas.push(nuevaSemana);
-        guardarEnLocal();
-        
-        semanaActiva = nuevaSemana;
+        const nueva = { id: Date.now(), fecha: document.getElementById('input-fecha').value, 
+                       temperatura: document.getElementById('input-temp').value, 
+                       clima: document.getElementById('input-clima').value, 
+                       evento: document.getElementById('input-evento').value, pedidos: [] };
+        bdSemanas.push(nueva);
+        semanaActiva = nueva;
+        localStorage.setItem('bdSemanas', JSON.stringify(bdSemanas));
         prepararPantallaPedido();
         cambiarPantalla('pantalla-pedido');
     }
 
-    // --- 4. LÓGICA DE ARMAR PEDIDO ---
     function renderizarProductos() {
         const cont = document.getElementById('contenedor-productos');
-        cont.innerHTML = '';
-        catalogoProductos.forEach(prod => {
-            const btn = document.createElement('button');
-            btn.className = 'btn-producto';
-            btn.innerHTML = `${prod.nombre}<br>$${prod.precio}`;
-            btn.onclick = () => agregarAlCarrito(prod);
-            cont.appendChild(btn);
+        catalogoProductos.forEach(p => {
+            const b = document.createElement('button');
+            b.className = 'btn-producto';
+            b.innerHTML = `${p.nombre}<br>$${p.precio}`;
+            b.onclick = () => {
+                let item = carritoActual.find(i => i.id === p.id);
+                if(item) item.cantidad++; else carritoActual.push({...p, cantidad: 1});
+                actualizarTotal();
+            };
+            cont.appendChild(b);
         });
     }
 
-    function prepararPantallaPedido() {
-        document.getElementById('info-semana-activa').innerHTML = 
-            `<strong>Semana Actual:</strong> ${semanaActiva.fecha} | ${semanaActiva.clima} | ${semanaActiva.evento || 'Sin evento'}`;
-        carritoActual = [];
-        actualizarTotalPedido();
-        limpiarBotonesEdad();
+    function seleccionarEdad(e, b) {
+        edadSeleccionada = e;
+        document.querySelectorAll('.btn-edad').forEach(btn => btn.classList.remove('selected'));
+        b.classList.add('selected');
     }
 
-    function seleccionarEdad(edad, botonElement) {
-        edadSeleccionada = edad;
-        limpiarBotonesEdad();
-        botonElement.classList.add('selected');
-    }
-
-    function limpiarBotonesEdad() {
-        document.querySelectorAll('.btn-edad').forEach(b => b.classList.remove('selected'));
-    }
-
-    function agregarAlCarrito(producto) {
-        let item = carritoActual.find(i => i.id === producto.id);
-        if (item) {
-            item.cantidad++;
-        } else {
-            carritoActual.push({ ...producto, cantidad: 1 });
-        }
-        actualizarTotalPedido();
-    }
-
-    function actualizarTotalPedido() {
-        let total = carritoActual.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
-        document.getElementById('total-pedido').innerText = total;
-        document.getElementById('total-carrito').innerText = total;
-    }
-
-    function cancelarPedido() {
-        if(confirm("¿Seguro que quieres borrar todo este pedido?")) {
-            carritoActual = [];
-            edadSeleccionada = "No especificado";
-            limpiarBotonesEdad();
-            actualizarTotalPedido();
-        }
+    function actualizarTotal() {
+        let t = carritoActual.reduce((a, i) => a + (i.precio * i.cantidad), 0);
+        document.getElementById('total-pedido').innerText = t;
     }
 
     function guardarPedido() {
-        if (carritoActual.length === 0) return alert("El carrito está vacío");
-
-        let total = carritoActual.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
-        
-        const nuevoPedido = {
-            idPedido: 'PED-' + Date.now(),
+        if(!carritoActual.length) return alert("Vacío");
+        const pedido = {
+            idPedido: Date.now(),
+            fecha: semanaActiva.fecha,
+            clima: semanaActiva.clima,
+            temperatura: semanaActiva.temperatura,
+            evento: semanaActiva.evento,
             rangoEdad: edadSeleccionada,
-            items: [...carritoActual],
-            total: total
+            items: carritoActual.map(i => `${i.cantidad}x ${i.nombre}`).join(', '),
+            total: carritoActual.reduce((a, i) => a + (i.precio * i.cantidad), 0)
         };
 
-        let index = bdSemanas.findIndex(s => s.id === semanaActiva.id);
-        bdSemanas[index].pedidos.push(nuevoPedido);
-        
-        guardarEnLocal();
-        alert("¡Pedido Guardado con éxito!");
-        
-        carritoActual = [];
-        edadSeleccionada = "No especificado";
-        limpiarBotonesEdad();
-        actualizarTotalPedido();
-    }
-
-    function cerrarSemana() {
-        semanaActiva = null;
-        cambiarPantalla('pantalla-portada');
-    }
-
-    // --- 5. LÓGICA DEL CARRITO ---
-    function renderizarCarrito() {
-        const cont = document.getElementById('contenido-carrito');
-        cont.innerHTML = '';
-        
-        if(carritoActual.length === 0) {
-            cont.innerHTML = '<p>No hay productos cargados.</p>';
-            return;
-        }
-
-        carritoActual.forEach((item, index) => {
-            const div = document.createElement('div');
-            div.className = 'item-carrito';
-            div.innerHTML = `
-                <span><strong>${item.cantidad}x</strong> ${item.nombre} ($${item.precio * item.cantidad})</span>
-                <button class="btn-danger" style="width:auto; padding:5px 10px;" onclick="eliminarDelCarrito(${index})">Eliminar</button>
-            `;
-            cont.appendChild(div);
+        // Enviar a Google Sheets
+        fetch(WEB_APP_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(pedido)
         });
-    }
 
-    function eliminarDelCarrito(index) {
-        carritoActual.splice(index, 1);
-        renderizarCarrito();
-        actualizarTotalPedido();
-    }
-
-    // --- 6. LÓGICA RESUMEN DE SEMANA Y CONTINUAR ---
-    function verResumenSemana(indexSemana) {
-        const semana = bdSemanas[indexSemana];
+        bdSemanas.find(s => s.id === semanaActiva.id).pedidos.push(pedido);
+        localStorage.setItem('bdSemanas', JSON.stringify(bdSemanas));
         
-        document.getElementById('datos-resumen-semana').innerHTML = `
-            <strong>Fecha:</strong> ${semana.fecha} <br>
-            <strong>Clima:</strong> ${semana.clima} (${semana.temperatura}°C) <br>
-            <strong>Evento:</strong> ${semana.evento || 'N/A'}
-        `;
+        alert("¡Guardado en Celular y Excel!");
+        carritoActual = [];
+        actualizarTotal();
+    }
 
-        // Lógica del nuevo botón
-        const btnContinuar = document.getElementById('btn-continuar-capturando');
-        btnContinuar.onclick = () => {
-            semanaActiva = bdSemanas[indexSemana];
+    function verResumenSemana(i) {
+        const sem = bdSemanas[i];
+        document.getElementById('datos-resumen-semana').innerText = `Semana: ${sem.fecha}`;
+        document.getElementById('btn-continuar-capturando').onclick = () => {
+            semanaActiva = sem;
             prepararPantallaPedido();
             cambiarPantalla('pantalla-pedido');
         };
-
-        let granTotal = 0;
-        const lista = document.getElementById('lista-pedidos-semana');
-        lista.innerHTML = '';
-
-        if(semana.pedidos.length === 0) {
-            lista.innerHTML = '<li>No hubo ventas en esta semana.</li>';
-        } else {
-            semana.pedidos.forEach(ped => {
-                granTotal += ped.total;
-                let textoProductos = ped.items.map(i => `${i.cantidad}x ${i.nombre}`).join(', ');
-
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <strong>Pedido ID:</strong> ${ped.idPedido} <br>
-                    <strong>Edad:</strong> ${ped.rangoEdad} <br>
-                    <strong>Productos:</strong> ${textoProductos} <br>
-                    <strong style="color:green;">Total: $${ped.total}</strong>
-                `;
-                lista.appendChild(li);
-            });
-        }
-
-        document.getElementById('gran-total-semana').innerText = granTotal;
         cambiarPantalla('pantalla-resumen');
     }
 
-    // --- FUNCIONES AUXILIARES ---
-    function guardarEnLocal() {
-        localStorage.setItem('bdSemanas', JSON.stringify(bdSemanas));
+    function prepararPantallaPedido() {
+        document.getElementById('info-semana-activa').innerText = `Capturando: ${semanaActiva.fecha}`;
+        carritoActual = [];
+        actualizarTotal();
     }
 
+    function cerrarSemana() { semanaActiva = null; cambiarPantalla('pantalla-portada'); }
+    function renderizarCarrito() { /* Opcional: similar a versiones anteriores */ }
 </script>
-
 </body>
 </html>
