@@ -3,209 +3,220 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Ventas Menudo</title>
+    <title>Menudo App PRO</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
-        .app-container { max-width: 500px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 15px; }
+        .app-container { max-width: 500px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .screen { display: none; }
         .active-screen { display: block; }
-        h2, h3 { color: #333; margin-top: 0; }
-        button { padding: 12px; margin: 5px 0; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; width: 100%; transition: background 0.3s; }
+        h2 { color: #333; text-align: center; }
+        button { padding: 12px; margin: 5px 0; border: none; border-radius: 8px; cursor: pointer; font-size: 15px; width: 100%; font-weight: bold; }
         .btn-primary { background: #007bff; color: white; }
         .btn-success { background: #28a745; color: white; }
         .btn-danger { background: #dc3545; color: white; }
         .btn-secondary { background: #6c757d; color: white; }
-        .grid-productos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; }
-        .btn-producto { background: #e2e8f0; color: #333; height: 60px; font-weight: bold; border: 1px solid #cbd5e1; }
-        .btn-edad { background: #f8f9fa; border: 1px solid #ccc; flex: 1; }
-        .btn-edad.selected { background: #007bff; color: white; border-color: #0056b3; }
-        input, select { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        .grid-productos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 15px 0; }
+        .btn-prod { background: #e9ecef; color: #333; height: 75px; border: 1px solid #ddd; font-size: 13px; }
+        .btn-prod:active { transform: scale(0.95); }
+        .flex-row { display: flex; gap: 5px; margin: 10px 0; }
+        .btn-edad { background: #fff; border: 1px solid #007bff; color: #007bff; flex: 1; font-size: 11px; }
+        .btn-edad.selected { background: #007bff; color: white; }
+        .resumen-total { font-size: 24px; font-weight: bold; text-align: center; color: #28a745; margin: 15px 0; padding: 10px; border-top: 2px solid #eee; }
+        .item-carrito { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; }
         .lista-datos { list-style: none; padding: 0; }
-        .lista-datos li { background: #f8f9fa; border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 5px; }
-        .resumen-total { font-size: 20px; font-weight: bold; text-align: center; margin: 15px 0; color: #28a745; }
-        .info-semana { background: #e9ecef; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-size: 14px; }
+        .lista-datos li { background: #f8f9fa; border: 1px solid #ddd; padding: 12px; margin-bottom: 8px; border-radius: 6px; }
+        input, select { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
+    <audio id="snd-click" src="https://www.soundjay.com/buttons/sounds/button-16.mp3" preload="auto"></audio>
+    <audio id="snd-cash" src="https://www.soundjay.com/misc/sounds/cash-register-05.mp3" preload="auto"></audio>
+
     <div id="pantalla-portada" class="screen active-screen">
-        <h2>Semanas Registradas</h2>
+        <h2>Menudo App 🍲</h2>
         <ul id="lista-semanas" class="lista-datos"></ul>
-        <button class="btn-primary" onclick="cambiarPantalla('pantalla-nueva-semana')">+ Añadir Nueva Semana</button>
+        <button class="btn-primary" onclick="cambiarPantalla('pantalla-nueva-semana')">+ Nueva Semana</button>
     </div>
 
     <div id="pantalla-nueva-semana" class="screen">
-        <h2>Nueva Semana</h2>
+        <h2>Configurar Semana</h2>
         <input type="date" id="input-fecha">
         <input type="number" id="input-temp" placeholder="Temp °C">
         <select id="input-clima">
-            <option value="Soleado">Soleado</option>
-            <option value="Nublado">Nublado</option>
-            <option value="Lluvioso">Lluvioso</option>
+            <option value="Soleado">☀️ Soleado</option>
+            <option value="Nublado">☁️ Nublado</option>
+            <option value="Lluvioso">🌧️ Lluvioso</option>
+            <option value="Frío">❄️ Frío</option>
         </select>
-        <input type="text" id="input-evento" placeholder="Evento">
-        <button class="btn-success" onclick="guardarSemana()">Iniciar Captura</button>
+        <button class="btn-success" onclick="guardarSemana()">Empezar</button>
         <button class="btn-secondary" onclick="cambiarPantalla('pantalla-portada')">Cancelar</button>
     </div>
 
     <div id="pantalla-pedido" class="screen">
-        <div id="info-semana-activa" class="info-semana"></div>
-        <div class="grid-productos" id="contenedor-productos"></div>
-        <div style="display:flex; gap:10px;">
-            <button class="btn-edad" onclick="seleccionarEdad('18-30', this)">18-30</button>
-            <button class="btn-edad" onclick="seleccionarEdad('31-50', this)">31-50</button>
-            <button class="btn-edad" onclick="seleccionarEdad('51+', this)">51+</button>
+        <h3 id="info-cabecera" style="font-size: 12px; color: #666; text-align: center;"></h3>
+        <div class="grid-productos" id="grid-prods"></div>
+        <div class="flex-row">
+            <button class="btn-edad" onclick="setEdad('10-20', this)">10-20</button>
+            <button class="btn-edad" onclick="setEdad('20-30', this)">20-30</button>
+            <button class="btn-edad" onclick="setEdad('40-50', this)">40-50</button>
+            <button class="btn-edad" onclick="setEdad('50-60+', this)">50-60+</button>
         </div>
-        <div class="resumen-total">Total: $<span id="total-pedido">0</span></div>
-        <button class="btn-success" id="btn-save" onclick="guardarPedido()">💾 Save (Guardar Pedido)</button>
-        <button class="btn-secondary" onclick="cerrarSemana()">Volver a Portada</button>
+        <div class="resumen-total">Total: $<span id="txt-total">0</span></div>
+        <button class="btn-primary" onclick="cambiarPantalla('pantalla-carrito')">🛒 Ver Carrito (<span id="count-cart">0</span>)</button>
+        <button class="btn-success" id="btn-save" onclick="enviarPedido()">💾 SAVE (Guardar Pedido)</button>
+        <button class="btn-secondary" onclick="cambiarPantalla('pantalla-portada')">Inicio</button>
+    </div>
+
+    <div id="pantalla-carrito" class="screen">
+        <h2>Carrito</h2>
+        <div id="lista-carrito"></div>
+        <button class="btn-primary" style="margin-top:20px;" onclick="cambiarPantalla('pantalla-pedido')">Volver</button>
+        <button class="btn-danger" style="margin-top:10px;" onclick="vaciarCarrito()">Vaciar Todo</button>
     </div>
 
     <div id="pantalla-resumen" class="screen">
-        <div id="datos-resumen-semana" class="info-semana"></div>
-        <button class="btn-success" id="btn-continuar-capturando">Continuar Capturando</button>
-        <ul id="lista-pedidos-semana" class="lista-datos"></ul>
+        <h2 id="resumen-titulo"></h2>
+        <button class="btn-success" id="btn-re-entrar">Continuar Vendiendo</button>
+        <ul id="pedidos-semana" class="lista-datos"></ul>
         <button class="btn-secondary" onclick="cambiarPantalla('pantalla-portada')">Cerrar</button>
     </div>
 </div>
 
 <script>
-    // TU URL ACTUALIZADA
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz-_Dw2_ZULveE9QNxKkAzJyJ2XZF4Okca9CUsiJmj4MxY2KWwBak9qVGBCWM7apeHk/exec';
+    // TU URL ESTÁ AQUÍ ABAJO:
+    const URL_EXCEL = 'https://script.google.com/macros/s/AKfycbz-_Dw2_ZULveE9QNxKkAzJyJ2XZF4Okca9CUsiJmj4MxY2KWwBak9qVGBCWM7apeHk/exec';
     
-    const catalogoProductos = [
-        { id: 1, nombre: '1 Litro', precio: 140 }, { id: 2, nombre: '1/2 Litro', precio: 70 },
-        { id: 3, nombre: 'Pezuña', precio: 35 }, { id: 4, nombre: 'Caldo 1/2', precio: 25 },
-        { id: 5, nombre: 'Caldo 1 Lit', precio: 45 }, { id: 6, nombre: 'Hueso Ch', precio: 25 },
-        { id: 7, nombre: 'Hueso Grande', precio: 35 }, { id: 8, nombre: 'Vasija $200', precio: 200 },
-        { id: 9, nombre: 'Vasija 1 Lit', precio: 140 }, { id: 10, nombre: 'Vasija 1/2 Lit', precio: 70 }
+    const CATALOGO = [
+        { n: '1 Litro', p: 140 }, { n: '1/2 Litro', p: 70 },
+        { n: 'Pezuña', p: 35 }, { n: 'Caldo 1/2', p: 25 },
+        { n: 'Caldo 1 Lit', p: 45 }, { n: 'Hueso Ch', p: 25 },
+        { n: 'Hueso Gde', p: 35 }, { n: 'Vasija $200', p: 200 },
+        { n: 'Vasija 1 Lit', p: 140 }, { n: 'Vasija 1/2', p: 70 },
+        { n: 'Pata Extra', p: 40 }, { n: 'Refresco', p: 25 },
+        { n: 'Orden Tacos', p: 60 }, { n: 'Extra Verdura', p: 10 }
     ];
 
-    let bdSemanas = JSON.parse(localStorage.getItem('bdSemanas')) || [];
-    let semanaActiva = null;
-    let carritoActual = [];
-    let edadSeleccionada = "No especificado";
+    let db = JSON.parse(localStorage.getItem('menudo_db')) || [];
+    let semActiva = null;
+    let cart = [];
+    let edadSel = "No especificado";
 
-    window.onload = () => { renderizarProductos(); renderizarSemanas(); document.getElementById('input-fecha').valueAsDate = new Date(); };
+    function play(id) { document.getElementById(id).currentTime = 0; document.getElementById(id).play().catch(()=>{}); }
 
     function cambiarPantalla(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
         document.getElementById(id).classList.add('active-screen');
-        if(id === 'pantalla-portada') renderizarSemanas();
+        if(id === 'pantalla-portada') renderSemanas();
+        if(id === 'pantalla-carrito') renderCarrito();
     }
 
-    function renderizarSemanas() {
+    function renderSemanas() {
         const lista = document.getElementById('lista-semanas');
-        lista.innerHTML = bdSemanas.length ? '' : '<li>No hay registros</li>';
-        bdSemanas.forEach((sem, i) => {
+        lista.innerHTML = db.length ? '' : '<li>Sin semanas</li>';
+        db.forEach((s, i) => {
             const li = document.createElement('li');
-            li.innerHTML = `Semana: ${sem.fecha} - $${sem.pedidos.reduce((a,b)=>a+b.total,0)}`;
-            li.onclick = () => verResumenSemana(i);
+            li.innerHTML = `<b>${s.fecha}</b> - $${s.pedidos.reduce((a,b)=>a+b.total,0)}`;
+            li.onclick = () => verResumen(i);
             lista.appendChild(li);
         });
     }
 
     function guardarSemana() {
-        const nueva = { id: Date.now(), fecha: document.getElementById('input-fecha').value, 
-                       temperatura: document.getElementById('input-temp').value, 
-                       clima: document.getElementById('input-clima').value, 
-                       evento: document.getElementById('input-evento').value, pedidos: [] };
-        bdSemanas.push(nueva);
-        semanaActiva = nueva;
-        localStorage.setItem('bdSemanas', JSON.stringify(bdSemanas));
-        prepararPantallaPedido();
+        let f = document.getElementById('input-fecha').value;
+        if(!f) return alert("Selecciona fecha");
+        let nueva = { id: Date.now(), fecha: f, clima: document.getElementById('input-clima').value, pedidos: [] };
+        db.push(nueva);
+        semActiva = nueva;
+        localStorage.setItem('menudo_db', JSON.stringify(db));
+        prepararPedido();
         cambiarPantalla('pantalla-pedido');
     }
 
-    function renderizarProductos() {
-        const cont = document.getElementById('contenedor-productos');
-        catalogoProductos.forEach(p => {
+    function prepararPedido() {
+        document.getElementById('info-cabecera').innerText = `Semana: ${semActiva.fecha}`;
+        const grid = document.getElementById('grid-prods');
+        grid.innerHTML = '';
+        CATALOGO.forEach(p => {
             const b = document.createElement('button');
-            b.className = 'btn-producto';
-            b.innerHTML = `${p.nombre}<br>$${p.precio}`;
+            b.className = 'btn-prod';
+            b.innerHTML = `${p.n}<br>$${p.p}`;
             b.onclick = () => {
-                let item = carritoActual.find(i => i.id === p.id);
-                if(item) item.cantidad++; else carritoActual.push({...p, cantidad: 1});
-                actualizarTotal();
+                play('snd-click');
+                let found = cart.find(x => x.n === p.n);
+                if(found) found.c++; else cart.push({...p, c: 1});
+                actualizarUI();
             };
-            cont.appendChild(b);
+            grid.appendChild(b);
         });
+        actualizarUI();
     }
 
-    function seleccionarEdad(e, b) {
-        edadSeleccionada = e;
+    function setEdad(v, b) {
+        play('snd-click');
+        edadSel = v;
         document.querySelectorAll('.btn-edad').forEach(btn => btn.classList.remove('selected'));
         b.classList.add('selected');
     }
 
-    function actualizarTotal() {
-        let t = carritoActual.reduce((a, i) => a + (i.precio * i.cantidad), 0);
-        document.getElementById('total-pedido').innerText = t;
+    function actualizarUI() {
+        let total = cart.reduce((a, b) => a + (b.p * b.c), 0);
+        document.getElementById('txt-total').innerText = total;
+        document.getElementById('count-cart').innerText = cart.reduce((a,b)=>a+b.c, 0);
     }
 
-    async function guardarPedido() {
-        if(!carritoActual.length) return alert("El carrito está vacío");
-        
+    function renderCarrito() {
+        const cont = document.getElementById('lista-carrito');
+        cont.innerHTML = cart.length ? '' : '<p>Vacío</p>';
+        cart.forEach((item, i) => {
+            const div = document.createElement('div');
+            div.className = 'item-carrito';
+            div.innerHTML = `<span>${item.c}x ${item.n}</span>
+                             <button class="btn-danger" style="width:auto; padding:5px 10px;" onclick="quitar(${i})">X</button>`;
+            cont.appendChild(div);
+        });
+    }
+
+    function quitar(i) {
+        if(cart[i].c > 1) cart[i].c--; else cart.splice(i, 1);
+        renderCarrito();
+        actualizarUI();
+    }
+
+    function vaciarCarrito() { cart = []; actualizarUI(); cambiarPantalla('pantalla-pedido'); }
+
+    async function enviarPedido() {
+        if(!cart.length) return alert("Carrito vacío");
         const btn = document.getElementById('btn-save');
-        btn.innerText = "⏳ Enviando al Excel...";
-        btn.disabled = true;
+        btn.innerText = "Guardando..."; btn.disabled = true;
 
         const pedido = {
-            idPedido: Date.now().toString(),
-            fecha: semanaActiva.fecha,
-            clima: semanaActiva.clima,
-            temperatura: semanaActiva.temperatura,
-            evento: semanaActiva.evento,
-            rangoEdad: edadSeleccionada,
-            items: carritoActual.map(i => `${i.cantidad}x ${i.nombre}`).join(', '),
-            total: carritoActual.reduce((a, i) => a + (i.precio * i.cantidad), 0)
+            idSemana: semActiva.fecha,
+            rangoEdad: edadSel,
+            items: cart.map(i => `${i.c}x ${i.n}`).join(', '),
+            total: cart.reduce((a, b) => a + (b.p * b.c), 0)
         };
 
         try {
-            // Intento de envío al Excel
-            await fetch(WEB_APP_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(pedido)
-            });
-            
-            // Guardar localmente
-            bdSemanas.find(s => s.id === semanaActiva.id).pedidos.push(pedido);
-            localStorage.setItem('bdSemanas', JSON.stringify(bdSemanas));
-            
-            alert("¡Pedido guardado exitosamente!");
-        } catch (e) {
-            alert("Error de conexión, pero se guardó en el celular.");
-        } finally {
-            btn.innerText = "💾 Save (Guardar Pedido)";
-            btn.disabled = false;
-            carritoActual = [];
-            edadSeleccionada = "No especificado";
-            document.querySelectorAll('.btn-edad').forEach(btn => btn.classList.remove('selected'));
-            actualizarTotal();
-        }
+            await fetch(URL_EXCEL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(pedido) });
+            play('snd-cash');
+            db.find(s => s.id === semActiva.id).pedidos.push(pedido);
+            localStorage.setItem('menudo_db', JSON.stringify(db));
+            alert("¡Guardado!");
+            cart = [];
+            actualizarUI();
+        } catch (e) { alert("Error de red"); }
+        btn.innerText = "💾 SAVE (Guardar Pedido)"; btn.disabled = false;
     }
 
-    function verResumenSemana(i) {
-        const sem = bdSemanas[i];
-        document.getElementById('datos-resumen-semana').innerText = `Resumen Semana: ${sem.fecha}`;
-        document.getElementById('btn-continuar-capturando').onclick = () => {
-            semanaActiva = sem;
-            prepararPantallaPedido();
-            cambiarPantalla('pantalla-pedido');
-        };
+    function verResumen(i) {
+        const s = db[i];
+        document.getElementById('resumen-titulo').innerText = s.fecha;
+        document.getElementById('btn-re-entrar').onclick = () => { semActiva = s; cart = []; prepararPedido(); cambiarPantalla('pantalla-pedido'); };
+        document.getElementById('pedidos-semana').innerHTML = s.pedidos.map(p => `<li>${p.items} - $${p.total}</li>`).join('');
         cambiarPantalla('pantalla-resumen');
     }
-
-    function prepararPantallaPedido() {
-        document.getElementById('info-semana-activa').innerText = `Semana: ${semanaActiva.fecha} | Clima: ${semanaActiva.clima}`;
-        carritoActual = [];
-        actualizarTotal();
-    }
-
-    function cerrarSemana() { semanaActiva = null; cambiarPantalla('pantalla-portada'); }
 </script>
 </body>
 </html>
