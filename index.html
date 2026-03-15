@@ -85,7 +85,6 @@
 </div>
 
 <script>
-    // TU URL ESTÁ AQUÍ ABAJO:
     const URL_EXCEL = 'https://script.google.com/macros/s/AKfycbz-_Dw2_ZULveE9QNxKkAzJyJ2XZF4Okca9CUsiJmj4MxY2KWwBak9qVGBCWM7apeHk/exec';
     
     const CATALOGO = [
@@ -93,9 +92,8 @@
         { n: 'Pezuña', p: 35 }, { n: 'Caldo 1/2', p: 25 },
         { n: 'Caldo 1 Lit', p: 45 }, { n: 'Hueso Ch', p: 25 },
         { n: 'Hueso Gde', p: 35 }, { n: 'Vasija $200', p: 200 },
-        { n: 'Vasija 1 Lit', p: 140 }, { n: 'Vasija 1/2', p: 70 },
-        { n: 'Pata Extra', p: 40 }, { n: 'Refresco', p: 25 },
-        { n: 'Orden Tacos', p: 60 }, { n: 'Extra Verdura', p: 10 }
+        { n: 'Vasija 1 Lit', p: 140 }, { n: 'Vasija 1/2 Lit', p: 70 },
+        { n: 'Vasija $300', p: 300 }, { n: 'Vasija 2 Lit', p: 280 }
     ];
 
     let db = JSON.parse(localStorage.getItem('menudo_db')) || [];
@@ -192,7 +190,6 @@
         btn.innerText = "Guardando..."; btn.disabled = true;
 
         const pedido = {
-            idSemana: semActiva.fecha,
             rangoEdad: edadSel,
             items: cart.map(i => `${i.c}x ${i.n}`).join(', '),
             total: cart.reduce((a, b) => a + (b.p * b.c), 0)
