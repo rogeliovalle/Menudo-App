@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Menudo App PRO v4.4</title>
+    <title>Menudo App PRO v4.5</title>
     <style>
         * { touch-action: manipulation; -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         
@@ -11,56 +11,58 @@
             font-family: 'Segoe UI', sans-serif; 
             background: #f0f2f5; 
             margin: 0; 
-            padding: 8px; 
+            padding: 5px; 
             overflow-x: hidden;
         }
         
-        .app-container { max-width: 500px; margin: 0 auto; background: white; padding: 12px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .app-container { max-width: 500px; margin: 0 auto; background: white; padding: 10px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .screen { display: none; }
         .active-screen { display: block; }
-        h2 { color: #333; text-align: center; margin-bottom: 10px; font-size: 20px; }
         
-        /* Reducción general de botones en un 20% */
+        h2 { color: #333; text-align: center; margin-bottom: 5px; font-size: 18px; }
+        h4 { margin: 5px 0; font-size: 13px; color: #666; }
+        
+        /* Botones un 20% más pequeños que la versión anterior */
         button { 
-            padding: 10px; margin: 3px 0; border: none; border-radius: 8px; cursor: pointer; 
-            font-size: 13px; width: 100%; font-weight: bold; transition: 0.1s;
+            padding: 8px; margin: 2px 0; border: none; border-radius: 6px; cursor: pointer; 
+            font-size: 12px; width: 100%; font-weight: bold; transition: 0.1s;
         }
 
         .btn-primary { background: #007bff; color: white; }
         .btn-success { background: #28a745; color: white; }
         .btn-danger { background: #dc3545; color: white; }
         .btn-secondary { background: #6c757d; color: white; }
-        .btn-sync { background: #ffc107; color: #333; border: 2px solid #e0a800; margin-bottom: 10px; }
+        .btn-sync { background: #ffc107; color: #333; border: 1px solid #e0a800; margin-bottom: 8px; padding: 6px; font-size: 11px; }
         
-        /* Grid más compacto */
-        .grid-productos { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 8px 0; }
-        .btn-prod { background: #e9ecef; color: #333; height: 60px; border: 1px solid #ddd; font-size: 11px; padding: 5px; }
+        /* Grid compacto al máximo */
+        .grid-productos { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin: 5px 0; }
+        .btn-prod { background: #e9ecef; color: #333; height: 48px; border: 1px solid #ddd; font-size: 10px; padding: 2px; line-height: 1.1; }
         .btn-prod:active { background: #ced4da; transform: scale(0.96); }
         
-        /* Botón Especial más delgado */
-        .btn-custom { background: #6f42c1 !important; color: white !important; height: 45px; margin: 5px 0; }
+        /* Venta Especial ultra delgada */
+        .btn-custom { background: #6f42c1 !important; color: white !important; height: 36px; margin: 3px 0; font-size: 11px; }
 
-        /* Rango de edad ultra compacto */
-        .flex-row { display: flex; gap: 3px; margin: 8px 0; justify-content: space-between; }
+        /* Edades tipo "pestaña" miniatura */
+        .flex-row { display: flex; gap: 2px; margin: 5px 0; justify-content: space-between; }
         .btn-edad { 
             background: #fff; border: 1px solid #007bff; color: #007bff; 
-            padding: 6px 1px; font-size: 9px; flex: 1; min-width: 0;
+            padding: 4px 0; font-size: 8px; flex: 1; min-width: 0; border-radius: 4px;
         }
         .btn-edad.selected { background: #007bff; color: white; }
         
-        /* Resumen de total reducido */
-        .resumen-total { font-size: 20px; font-weight: bold; text-align: center; color: #28a745; margin: 5px 0; padding: 5px; border-top: 1px solid #eee; }
+        /* Área de total comprimida */
+        .resumen-total { font-size: 18px; font-weight: bold; text-align: center; color: #28a745; margin: 3px 0; padding: 3px; border-top: 1px solid #eee; }
         
-        /* Agrupación de botones de acción */
-        .action-group { display: flex; gap: 5px; margin-top: 5px; }
-        .action-group button { flex: 1; font-size: 12px; }
+        /* Acciones finales en bloque compacto */
+        .action-group { display: flex; gap: 4px; margin-top: 3px; }
+        .action-group button { flex: 1; font-size: 11px; padding: 8px; }
 
-        .item-carrito { display: flex; justify-content: space-between; align-items: center; padding: 6px; border-bottom: 1px solid #eee; font-size: 13px; }
+        .item-carrito { display: flex; justify-content: space-between; align-items: center; padding: 4px; border-bottom: 1px solid #eee; font-size: 12px; }
         .lista-datos { list-style: none; padding: 0; margin: 0; }
-        .lista-datos li { background: #f8f9fa; border: 1px solid #ddd; padding: 10px; margin-bottom: 6px; border-radius: 8px; font-size: 13px; }
+        .lista-datos li { background: #f8f9fa; border: 1px solid #ddd; padding: 8px; margin-bottom: 5px; border-radius: 6px; font-size: 12px; }
         
-        input, select { width: 100%; padding: 10px; margin-bottom: 8px; border: 1px solid #ccc; border-radius: 8px; font-size: 13px; }
-        .badge-sync { font-size: 9px; padding: 2px 5px; border-radius: 10px; margin-left: 5px; }
+        input, select { width: 100%; padding: 8px; margin-bottom: 6px; border: 1px solid #ccc; border-radius: 6px; font-size: 12px; }
+        .badge-sync { font-size: 8px; padding: 1px 4px; border-radius: 8px; margin-left: 3px; }
         .bg-red { background: #dc3545; color: white; }
         .bg-green { background: #28a745; color: white; }
     </style>
@@ -73,8 +75,8 @@
 
     <div id="pantalla-portada" class="screen active-screen">
         <h2>Menudo App 🍲</h2>
-        <button id="btn-sync-global" class="btn-sync" onclick="sincronizarTodo()" style="display:none;">🔄 Sync Pendientes (<span id="count-sync">0</span>)</button>
-        <h4 style="margin-bottom:8px; color:#666; font-size: 14px;">Semanas:</h4>
+        <button id="btn-sync-global" class="btn-sync" onclick="sincronizarTodo()">🔄 Sync Pendientes (<span id="count-sync">0</span>)</button>
+        <h4>Semanas:</h4>
         <ul id="lista-semanas" class="lista-datos"></ul>
         <button class="btn-primary" onclick="cambiarPantalla('pantalla-nueva-semana')">+ Nueva Semana</button>
     </div>
@@ -94,11 +96,11 @@
     </div>
 
     <div id="pantalla-pedido" class="screen">
-        <h3 id="info-cabecera" style="font-size: 10px; color: #666; text-align: center; margin: 0;"></h3>
+        <h3 id="info-cabecera" style="font-size: 9px; color: #666; text-align: center; margin: 0;"></h3>
         
         <div class="grid-productos" id="grid-prods"></div>
 
-        <button class="btn-custom" onclick="agregarPersonalizado()">✨ Venta Especial ($?)</button>
+        <button class="btn-custom" onclick="agregarPersonalizado()">✨ VENTA ESPECIAL ($?)</button>
 
         <div class="flex-row">
             <button class="btn-edad" onclick="setEdad('10-20', this)">10-20</button>
@@ -110,7 +112,7 @@
 
         <div class="resumen-total">Total: $<span id="txt-total">0</span></div>
 
-        <button class="btn-success" id="btn-save" style="margin-bottom: 8px;" onclick="guardarPedidoLocal()">💾 GUARDAR PEDIDO</button>
+        <button class="btn-success" id="btn-save" style="padding: 10px; font-size: 13px;" onclick="guardarPedidoLocal()">💾 GUARDAR PEDIDO</button>
         
         <div class="action-group">
             <button class="btn-primary" onclick="cambiarPantalla('pantalla-carrito')">🛒 Carrito (<span id="count-cart">0</span>)</button>
@@ -121,35 +123,35 @@
     <div id="pantalla-carrito" class="screen">
         <h2>Carrito</h2>
         <div id="lista-carrito"></div>
-        <button class="btn-primary" style="margin-top:15px;" onclick="cambiarPantalla('pantalla-pedido')">Volver</button>
+        <button class="btn-primary" style="margin-top:10px;" onclick="cambiarPantalla('pantalla-pedido')">Volver</button>
         <button class="btn-danger" onclick="vaciarCarrito()">Vaciar</button>
     </div>
 
     <div id="pantalla-resumen" class="screen">
         <h2 id="resumen-titulo"></h2>
-        <button class="btn-success" id="btn-re-entrar" style="margin-bottom:10px;">+ Vender</button>
-        <div id="pedidos-historial" style="max-height: 200px; overflow-y: auto;">
+        <button class="btn-success" id="btn-re-entrar" style="margin-bottom:8px; padding:8px;">+ Vender</button>
+        <div id="pedidos-historial" style="max-height: 180px; overflow-y: auto;">
             <ul id="lista-pedidos-historial" class="lista-datos"></ul>
         </div>
-        <button class="btn-secondary" style="margin-top:10px;" onclick="cambiarPantalla('pantalla-portada')">Cerrar</button>
+        <button class="btn-secondary" style="margin-top:8px;" onclick="cambiarPantalla('pantalla-portada')">Cerrar</button>
     </div>
 </div>
 
 <script>
-    // --- FEEDBACK ---
+    // --- LÓGICA DE FEEDBACK ---
     function feedback(tipo) {
         if (tipo === 'click') {
             const s = document.getElementById('snd-click');
             s.currentTime = 0; s.play().catch(()=>{});
-            if (navigator.vibrate) navigator.vibrate(30);
+            if (navigator.vibrate) navigator.vibrate(25);
         } else if (tipo === 'cash') {
             const s = document.getElementById('snd-cash');
             s.currentTime = 0; s.play().catch(()=>{});
-            if (navigator.vibrate) navigator.vibrate([80, 40, 80]);
+            if (navigator.vibrate) navigator.vibrate([60, 30, 60]);
         }
     }
 
-    // BLOQUEO ZOOM
+    // BLOQUEO ZOOM IPHONE
     document.addEventListener('touchstart', (e) => { if (e.touches.length > 1) e.preventDefault(); }, { passive: false });
     let lastT = 0;
     document.addEventListener('touchend', (e) => {
@@ -194,11 +196,11 @@
 
     function renderSemanas() {
         const lista = document.getElementById('lista-semanas');
-        lista.innerHTML = db.length ? '' : '<li style="text-align:center; color:#999; font-size:12px;">Sin semanas</li>';
+        lista.innerHTML = db.length ? '' : '<li style="text-align:center; color:#999; font-size:11px;">Vacío</li>';
         db.forEach((s, i) => {
             const p = s.pedidos.filter(pd => !pd.sincronizado).length;
             const li = document.createElement('li');
-            li.innerHTML = `<b>Sem: ${s.fecha}</b><br><small>Pedidos: ${s.pedidos.length}</small>
+            li.innerHTML = `<b>Sem: ${s.fecha}</b> | <small>Peds: ${s.pedidos.length}</small>
                             ${p > 0 ? `<span class="badge-sync bg-red">Pend: ${p}</span>` : `<span class="badge-sync bg-green">OK</span>`}`;
             li.onclick = () => { feedback('click'); verResumenSemana(i); };
             lista.appendChild(li);
@@ -206,7 +208,7 @@
     }
 
     function prepararPedido() {
-        document.getElementById('info-cabecera').innerText = `Capturando: ${semActiva.fecha}`;
+        document.getElementById('info-cabecera').innerText = `Venta: ${semActiva.fecha}`;
         const grid = document.getElementById('grid-prods');
         grid.innerHTML = '';
         CATALOGO.forEach(p => {
@@ -220,7 +222,7 @@
     }
 
     function guardarPedidoLocal() {
-        if(!cart.length) return alert("Carrito vacío");
+        if(!cart.length) return alert("¡Carrito vacío!");
         const tot = cart.reduce((a, b) => a + b.p, 0);
         const p = {
             idPedido: Date.now(), idSemana: semActiva.fecha, rangoEdad: edadSel,
@@ -240,7 +242,7 @@
     async function sincronizarTodo() {
         feedback('click');
         const btn = document.getElementById('btn-sync-global');
-        btn.innerText = "⏳ Subiendo..."; btn.disabled = true;
+        btn.innerText = "⏳..."; btn.disabled = true;
         for (let s of db) {
             for (let p of s.pedidos) {
                 if (!p.sincronizado) {
@@ -249,20 +251,20 @@
                         await fetch(URL_EXCEL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(d) });
                         p.sincronizado = true;
                         localStorage.setItem('menudo_db', JSON.stringify(db));
-                    } catch (e) { alert("Error de red"); btn.disabled = false; return; }
+                    } catch (e) { alert("Error"); btn.disabled = false; return; }
                 }
             }
         }
-        alert("✅ Sincronizado"); renderSemanas(); actualizarBotonSync(); btn.disabled = false;
+        alert("✅ Listo"); renderSemanas(); actualizarBotonSync(); btn.disabled = false;
     }
 
     function setEdad(v, b) { feedback('click'); edadSel = v; document.querySelectorAll('.btn-edad').forEach(btn => btn.classList.remove('selected')); b.classList.add('selected'); }
     function actualizarUI() { document.getElementById('txt-total').innerText = cart.reduce((a, b) => a + b.p, 0); document.getElementById('count-cart').innerText = cart.length; }
-    function renderCarrito() { const c = document.getElementById('lista-carrito'); c.innerHTML = cart.length ? '' : '<p>Vacío</p>'; cart.forEach((item, i) => { const d = document.createElement('div'); d.className = 'item-carrito'; d.innerHTML = `<span>${item.n} ($${item.p})</span><button class="btn-danger" style="width:auto; padding:4px 8px;" onclick="quitar(${i})">X</button>`; c.appendChild(d); }); }
+    function renderCarrito() { const c = document.getElementById('lista-carrito'); c.innerHTML = cart.length ? '' : '<p>Vacío</p>'; cart.forEach((item, i) => { const d = document.createElement('div'); d.className = 'item-carrito'; d.innerHTML = `<span>${item.n} ($${item.p})</span><button class="btn-danger" style="width:auto; padding:2px 5px;" onclick="quitar(${i})">X</button>`; c.appendChild(d); }); }
     function quitar(i) { feedback('click'); cart.splice(i, 1); renderCarrito(); actualizarUI(); }
     function vaciarCarrito() { feedback('click'); cart = []; actualizarUI(); cambiarPantalla('pantalla-pedido'); }
     function cerrarSesionPedido() { feedback('click'); semActiva = null; cart = []; cambiarPantalla('pantalla-portada'); }
-    function guardarNuevaSemana() { feedback('click'); let f = document.getElementById('input-fecha').value; if(!f) return alert("Fecha!"); let n = { id: Date.now(), fecha: f, pedidos: [] }; db.push(n); semActiva = n; localStorage.setItem('menudo_db', JSON.stringify(db)); prepararPedido(); cambiarPantalla('pantalla-pedido'); }
+    function guardarNuevaSemana() { feedback('click'); let f = document.getElementById('input-fecha').value; if(!f) return alert("¡Fecha!"); let n = { id: Date.now(), fecha: f, pedidos: [] }; db.push(n); semActiva = n; localStorage.setItem('menudo_db', JSON.stringify(db)); prepararPedido(); cambiarPantalla('pantalla-pedido'); }
     function verResumenSemana(i) { const s = db[i]; document.getElementById('resumen-titulo').innerText = "Sem: " + s.fecha; document.getElementById('btn-re-entrar').onclick = () => { feedback('click'); semActiva = s; prepararPedido(); cambiarPantalla('pantalla-pedido'); }; const h = document.getElementById('lista-pedidos-historial'); h.innerHTML = s.pedidos.length ? '' : '<li>Vacío</li>'; s.pedidos.slice().reverse().forEach(p => { const li = document.createElement('li'); li.innerHTML = `${p.sincronizado ? '✅' : '⏳'} $${p.total} - ${p.itemsText}`; h.appendChild(li); }); cambiarPantalla('pantalla-resumen'); }
     function actualizarBotonSync() { let tp = 0; db.forEach(s => tp += s.pedidos.filter(p => !p.sincronizado).length); const btn = document.getElementById('btn-sync-global'); if(tp > 0) { btn.style.display = 'block'; document.getElementById('count-sync').innerText = tp; } else { btn.style.display = 'none'; } }
 </script>
