@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Menudo App PRO v4.6</title>
+    <title>Menudo App PRO v4.7</title>
     <style>
+        /* BLOQUEO DE ZOOM Y AJUSTES TÁCTILES */
         * { touch-action: manipulation; -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         
         body { 
             font-family: 'Segoe UI', sans-serif; 
             background: #f0f2f5; 
             margin: 0; 
-            /* Aumento del 50% en padding global */
-            padding: 8px; 
+            padding: 15px; 
             overflow-x: hidden;
         }
         
@@ -20,8 +20,7 @@
             max-width: 500px; 
             margin: 0 auto; 
             background: white; 
-            /* Aumento del 50% en padding contenedor */
-            padding: 15px; 
+            padding: 20px; 
             border-radius: 12px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
         }
@@ -29,71 +28,55 @@
         .screen { display: none; }
         .active-screen { display: block; }
         
-        /* Título aumentado 50% */
-        h2 { color: #333; text-align: center; margin-bottom: 5px; font-size: 27px; }
-        /* Estilo para el número de versión */
-        .version-label { text-align: center; color: #888; font-size: 12px; margin-bottom: 15px; display: block; }
+        h2 { color: #333; text-align: center; margin-bottom: 5px; font-size: 24px; }
+        .version-label { text-align: center; color: #aaa; font-size: 11px; margin-bottom: 15px; display: block; }
         
-        /* H4 aumentado 50% */
-        h4 { margin: 8px 0; font-size: 20px; color: #666; }
-        
-        /* Botones estándar aumentados 50% en todo */
         button { 
-            /* Padding aumentado 50% */
-            padding: 12px; 
-            /* Margen aumentado 50% */
-            margin: 3px 0; 
-            border: none; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            /* Fuente aumentada 50% */
-            font-size: 18px; 
-            width: 100%; 
-            font-weight: bold; 
-            transition: 0.1s;
+            padding: 12px; margin: 5px 0; border: none; border-radius: 8px; cursor: pointer; 
+            font-size: 15px; width: 100%; font-weight: bold; transition: 0.1s;
         }
 
         .btn-primary { background: #007bff; color: white; }
         .btn-success { background: #28a745; color: white; }
         .btn-danger { background: #dc3545; color: white; }
         .btn-secondary { background: #6c757d; color: white; }
-        /* Botón sync aumentado 50% */
-        .btn-sync { background: #ffc107; color: #333; border: 2px solid #e0a800; margin-bottom: 12px; padding: 10px; font-size: 17px; }
+        .btn-sync { background: #ffc107; color: #333; border: 2px solid #e0a800; margin-bottom: 15px; }
         
-        /* Grid aumentado 50% en gaps */
-        .grid-productos { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 8px 0; }
-        /* Altura producto aumentada 50% y fuente 50% */
-        .btn-prod { background: #e9ecef; color: #333; height: 72px; border: 1px solid #ddd; font-size: 15px; padding: 4px; line-height: 1.2; }
-        .btn-prod:active { background: #ced4da; transform: scale(0.96); }
+        /* GRID DE PRODUCTOS: Regresamos al tamaño grande original */
+        .grid-productos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 15px 0; }
+        .btn-prod { 
+            background: #e9ecef; 
+            color: #333; 
+            height: 80px; /* Tamaño original cómodo */
+            border: 1px solid #ddd; 
+            font-size: 14px; 
+            padding: 5px; 
+            line-height: 1.3; 
+        }
+        .btn-prod:active { background: #ced4da; transform: scale(0.97); }
         
-        /* Venta Especial aumentada 50% en altura y fuente */
-        .btn-custom { background: #6f42c1 !important; color: white !important; height: 54px; margin: 5px 0; font-size: 17px; }
+        /* Botón Especial Morado */
+        .btn-custom { background: #6f42c1 !important; color: white !important; height: 55px; margin: 8px 0; font-size: 16px; }
 
-        /* Edades aumentadas 50% en gap, padding y fuente */
-        .flex-row { display: flex; gap: 3px; margin: 8px 0; justify-content: space-between; }
+        /* Edades: Optimizadas para que quepan las 5 pero con buen tamaño */
+        .flex-row { display: flex; gap: 4px; margin: 12px 0; justify-content: space-between; }
         .btn-edad { 
             background: #fff; border: 1px solid #007bff; color: #007bff; 
-            padding: 6px 0; font-size: 12px; flex: 1; min-width: 0; border-radius: 6px;
+            padding: 10px 2px; font-size: 11px; flex: 1; min-width: 0; border-radius: 6px;
         }
         .btn-edad.selected { background: #007bff; color: white; }
         
-        /* Total aumentado 50% */
-        .resumen-total { font-size: 27px; font-weight: bold; text-align: center; color: #28a745; margin: 5px 0; padding: 5px; border-top: 2px solid #eee; }
+        .resumen-total { font-size: 26px; font-weight: bold; text-align: center; color: #28a745; margin: 10px 0; padding: 10px; border-top: 2px solid #eee; }
         
-        /* Acciones finales aumentadas 50% */
-        .action-group { display: flex; gap: 6px; margin-top: 5px; }
-        .action-group button { flex: 1; font-size: 17px; padding: 12px; }
+        /* Grupo de botones de abajo */
+        .action-group { display: flex; gap: 8px; margin-top: 8px; }
+        .action-group button { flex: 1; font-size: 14px; padding: 12px; }
 
-        /* Textos de carrito y listas aumentados 50% */
-        .item-carrito { display: flex; justify-content: space-between; align-items: center; padding: 6px; border-bottom: 1px solid #eee; font-size: 18px; }
-        .item-carrito button { padding: 4px 8px; font-size: 14px; width: auto;}
         .lista-datos { list-style: none; padding: 0; margin: 0; }
-        .lista-datos li { background: #f8f9fa; border: 1px solid #ddd; padding: 12px; margin-bottom: 8px; border-radius: 8px; font-size: 18px; }
+        .lista-datos li { background: #f8f9fa; border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 8px; font-size: 15px; }
         
-        /* Inputs aumentados 50% */
-        input, select { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 18px; }
-        /* Badge sync aumentado 50% */
-        .badge-sync { font-size: 12px; padding: 2px 6px; border-radius: 12px; margin-left: 5px; }
+        input, select { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; }
+        .badge-sync { font-size: 10px; padding: 2px 6px; border-radius: 12px; margin-left: 5px; }
         .bg-red { background: #dc3545; color: white; }
         .bg-green { background: #28a745; color: white; }
     </style>
@@ -106,16 +89,16 @@
 
     <div id="pantalla-portada" class="screen active-screen">
         <h2>Menudo App 🍲</h2>
-        <span class="version-label">v4.6 - Edición Balanceada (+50%)</span>
+        <span class="version-label">v4.7 - Tamaño Original Optimizado</span>
         
-        <button id="btn-sync-global" class="btn-sync" onclick="sincronizarTodo()">🔄 Sync Pendientes (<span id="count-sync">0</span>)</button>
-        <h4>Semanas:</h4>
+        <button id="btn-sync-global" class="btn-sync" onclick="sincronizarTodo()" style="display:none;">🔄 Sync Pendientes (<span id="count-sync">0</span>)</button>
+        <h4 style="margin: 10px 0; font-size: 16px; color: #555;">Semanas Guardadas:</h4>
         <ul id="lista-semanas" class="lista-datos"></ul>
         <button class="btn-primary" onclick="cambiarPantalla('pantalla-nueva-semana')">+ Nueva Semana</button>
     </div>
 
     <div id="pantalla-nueva-semana" class="screen">
-        <h2>Configurar</h2>
+        <h2>Configurar Semana</h2>
         <input type="date" id="input-fecha">
         <input type="number" id="input-temp" placeholder="Temp °C">
         <select id="input-clima">
@@ -124,12 +107,12 @@
             <option value="Lluvioso">🌧️ Lluvioso</option>
             <option value="Frío">❄️ Frío</option>
         </select>
-        <button class="btn-success" onclick="guardarNuevaSemana()">Iniciar</button>
+        <button class="btn-success" onclick="guardarNuevaSemana()">Iniciar Venta</button>
         <button class="btn-secondary" onclick="cambiarPantalla('pantalla-portada')">Volver</button>
     </div>
 
     <div id="pantalla-pedido" class="screen">
-        <h3 id="info-cabecera" style="font-size: 12px; color: #666; text-align: center; margin: 0;"></h3>
+        <h3 id="info-cabecera" style="font-size: 11px; color: #888; text-align: center; margin: 0;"></h3>
         
         <div class="grid-productos" id="grid-prods"></div>
 
@@ -145,7 +128,7 @@
 
         <div class="resumen-total">Total: $<span id="txt-total">0</span></div>
 
-        <button class="btn-success" id="btn-save" style="padding: 15px; font-size: 20px; margin-bottom: 8px;" onclick="guardarPedidoLocal()">💾 GUARDAR PEDIDO</button>
+        <button class="btn-success" id="btn-save" style="padding: 16px; font-size: 18px; margin-bottom: 8px;" onclick="guardarPedidoLocal()">💾 GUARDAR PEDIDO</button>
         
         <div class="action-group">
             <button class="btn-primary" onclick="cambiarPantalla('pantalla-carrito')">🛒 Carrito (<span id="count-cart">0</span>)</button>
@@ -155,36 +138,36 @@
 
     <div id="pantalla-carrito" class="screen">
         <h2>Carrito</h2>
-        <div id="lista-carrito"></div>
-        <button class="btn-primary" style="margin-top:15px;" onclick="cambiarPantalla('pantalla-pedido')">Volver</button>
-        <button class="btn-danger" onclick="vaciarCarrito()">Vaciar</button>
+        <div id="lista-carrito" style="margin-bottom: 15px;"></div>
+        <button class="btn-primary" onclick="cambiarPantalla('pantalla-pedido')">Volver</button>
+        <button class="btn-danger" style="margin-top: 10px;" onclick="vaciarCarrito()">Vaciar Carrito</button>
     </div>
 
     <div id="pantalla-resumen" class="screen">
         <h2 id="resumen-titulo"></h2>
-        <button class="btn-success" id="btn-re-entrar" style="margin-bottom:12px; padding:12px;">+ Vender</button>
+        <button class="btn-success" id="btn-re-entrar" style="margin-bottom:15px; padding:15px;">+ Continuar Vendiendo</button>
         <div id="pedidos-historial" style="max-height: 250px; overflow-y: auto;">
             <ul id="lista-pedidos-historial" class="lista-datos"></ul>
         </div>
-        <button class="btn-secondary" style="margin-top:12px;" onclick="cambiarPantalla('pantalla-portada')">Cerrar</button>
+        <button class="btn-secondary" style="margin-top:15px;" onclick="cambiarPantalla('pantalla-portada')">Cerrar</button>
     </div>
 </div>
 
 <script>
-    // --- LÓGICA DE FEEDBACK (Ligeramente ajustada para el nuevo tamaño) ---
+    // FEEDBACK (SONIDO Y VIBRACIÓN)
     function feedback(tipo) {
         if (tipo === 'click') {
             const s = document.getElementById('snd-click');
             s.currentTime = 0; s.play().catch(()=>{});
-            if (navigator.vibrate) navigator.vibrate(30); // Vibración un pelín más larga
+            if (navigator.vibrate) navigator.vibrate(40);
         } else if (tipo === 'cash') {
             const s = document.getElementById('snd-cash');
             s.currentTime = 0; s.play().catch(()=>{});
-            if (navigator.vibrate) navigator.vibrate([70, 40, 70]); // Patrón ajustado
+            if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
         }
     }
 
-    // BLOQUEO ZOOM IPHONE (Mantenemos la artillería pesada)
+    // BLOQUEO DE ZOOM EN IPHONE
     document.addEventListener('touchstart', (e) => { if (e.touches.length > 1) e.preventDefault(); }, { passive: false });
     let lastT = 0;
     document.addEventListener('touchend', (e) => {
@@ -221,7 +204,7 @@
         feedback('click');
         let precio = prompt("Monto $$:", "");
         if (!precio || isNaN(precio)) return;
-        let nombre = prompt("Concepto:", "");
+        let nombre = prompt("¿Qué es?:", "");
         if (!nombre) nombre = "Personalizado";
         cart.push({ n: nombre, p: parseFloat(precio) });
         actualizarUI();
@@ -229,7 +212,7 @@
 
     function renderSemanas() {
         const lista = document.getElementById('lista-semanas');
-        lista.innerHTML = db.length ? '' : '<li style="text-align:center; color:#999; font-size:16px;">Vacío</li>';
+        lista.innerHTML = db.length ? '' : '<li style="text-align:center; color:#999;">Vacío</li>';
         db.forEach((s, i) => {
             const p = s.pedidos.filter(pd => !pd.sincronizado).length;
             const li = document.createElement('li');
@@ -241,7 +224,7 @@
     }
 
     function prepararPedido() {
-        document.getElementById('info-cabecera').innerText = `Venta: ${semActiva.fecha}`;
+        document.getElementById('info-cabecera').innerText = `Capturando Semana: ${semActiva.fecha}`;
         const grid = document.getElementById('grid-prods');
         grid.innerHTML = '';
         CATALOGO.forEach(p => {
@@ -255,7 +238,7 @@
     }
 
     function guardarPedidoLocal() {
-        if(!cart.length) return alert("¡Carrito vacío!");
+        if(!cart.length) return alert("Carrito vacío");
         const tot = cart.reduce((a, b) => a + b.p, 0);
         const p = {
             idPedido: Date.now(), idSemana: semActiva.fecha, rangoEdad: edadSel,
@@ -269,7 +252,7 @@
         cart = []; edadSel = "No especificado";
         document.querySelectorAll('.btn-edad').forEach(b => b.classList.remove('selected'));
         actualizarUI();
-        alert("¡Guardado localmente!");
+        alert("¡Pedido Guardado!");
     }
 
     async function sincronizarTodo() {
@@ -288,18 +271,19 @@
                 }
             }
         }
-        alert("✅ Sincronizado"); renderSemanas(); actualizarBotonSync(); btn.disabled = false;
+        alert("✅ Sincronizado!"); renderSemanas(); actualizarBotonSync(); btn.disabled = false;
     }
 
+    // FUNCIONES DE APOYO
     function setEdad(v, b) { feedback('click'); edadSel = v; document.querySelectorAll('.btn-edad').forEach(btn => btn.classList.remove('selected')); b.classList.add('selected'); }
     function actualizarUI() { document.getElementById('txt-total').innerText = cart.reduce((a, b) => a + b.p, 0); document.getElementById('count-cart').innerText = cart.length; }
-    function renderCarrito() { const c = document.getElementById('lista-carrito'); c.innerHTML = cart.length ? '' : '<p>Vacío</p>'; cart.forEach((item, i) => { const d = document.createElement('div'); d.className = 'item-carrito'; d.innerHTML = `<span>${item.n} ($${item.p})</span><button class="btn-danger" style="width:auto; padding:4px 8px;" onclick="quitar(${i})">X</button>`; c.appendChild(d); }); }
+    function renderCarrito() { const c = document.getElementById('lista-carrito'); c.innerHTML = cart.length ? '' : '<p>Vacío</p>'; cart.forEach((item, i) => { const d = document.createElement('div'); d.className = 'item-carrito'; d.innerHTML = `<span>${item.n} ($${item.p})</span><button class="btn-danger" style="width:auto; padding:5px 10px;" onclick="quitar(${i})">X</button>`; c.appendChild(d); }); }
     function quitar(i) { feedback('click'); cart.splice(i, 1); renderCarrito(); actualizarUI(); }
     function vaciarCarrito() { feedback('click'); cart = []; actualizarUI(); cambiarPantalla('pantalla-pedido'); }
     function cerrarSesionPedido() { feedback('click'); semActiva = null; cart = []; cambiarPantalla('pantalla-portada'); }
     function guardarNuevaSemana() { feedback('click'); let f = document.getElementById('input-fecha').value; if(!f) return alert("¡Fecha!"); let n = { id: Date.now(), fecha: f, pedidos: [] }; db.push(n); semActiva = n; localStorage.setItem('menudo_db', JSON.stringify(db)); prepararPedido(); cambiarPantalla('pantalla-pedido'); }
     function verResumenSemana(i) { const s = db[i]; document.getElementById('resumen-titulo').innerText = "Sem: " + s.fecha; document.getElementById('btn-re-entrar').onclick = () => { feedback('click'); semActiva = s; prepararPedido(); cambiarPantalla('pantalla-pedido'); }; const h = document.getElementById('lista-pedidos-historial'); h.innerHTML = s.pedidos.length ? '' : '<li>Vacío</li>'; s.pedidos.slice().reverse().forEach(p => { const li = document.createElement('li'); li.innerHTML = `${p.sincronizado ? '✅' : '⏳'} $${p.total} - ${p.itemsText}`; h.appendChild(li); }); cambiarPantalla('pantalla-resumen'); }
-    function actualizarBotonSync() { let tp = 0; db.forEach(s => tp += s.pedidos.filter(p => !p.sincronizado).length); const btn = document.getElementById('btn-sync-global'); if(tp > 0) { btn.style.display = 'block'; document.getElementById('count-sync').innerText = tp; } else { btn.style.display = 'none'; } }
+    function actualizarBotonSync() { let tp = 0; db.forEach(s => tp += s.pedidos.filter(pd => !pd.sincronizado).length); const btn = document.getElementById('btn-sync-global'); if(tp > 0) { btn.style.display = 'block'; document.getElementById('count-sync').innerText = tp; } else { btn.style.display = 'none'; } }
 </script>
 </body>
 </html>
