@@ -2,26 +2,46 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menudo App PRO v4.0 - Offline Mode</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Menudo App PRO v4.1</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 15px; }
+        /* EL SECRETO PARA EL ZOOM: touch-action manipulation */
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: #f0f2f5; 
+            margin: 0; 
+            padding: 15px; 
+            touch-action: manipulation; 
+        }
+        
         .app-container { max-width: 500px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .screen { display: none; }
         .active-screen { display: block; }
         h2 { color: #333; text-align: center; margin-bottom: 20px; }
-        button { padding: 12px; margin: 5px 0; border: none; border-radius: 8px; cursor: pointer; font-size: 15px; width: 100%; font-weight: bold; transition: 0.2s; }
+        
+        button { 
+            padding: 12px; margin: 5px 0; border: none; border-radius: 8px; cursor: pointer; 
+            font-size: 15px; width: 100%; font-weight: bold; transition: 0.2s;
+            touch-action: manipulation; /* Refuerzo anti-zoom en botones */
+        }
+
         .btn-primary { background: #007bff; color: white; }
         .btn-success { background: #28a745; color: white; }
         .btn-danger { background: #dc3545; color: white; }
         .btn-secondary { background: #6c757d; color: white; }
         .btn-sync { background: #ffc107; color: #333; border: 2px solid #e0a800; margin-bottom: 20px; }
+        
         .grid-productos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 15px 0; }
         .btn-prod { background: #e9ecef; color: #333; height: 75px; border: 1px solid #ddd; font-size: 13px; }
         .btn-prod:active { transform: scale(0.95); background: #d1d5db; }
+        
+        /* Estilo especial para el botón Personalizado */
+        .btn-custom { background: #6f42c1; color: white; border: 1px solid #59359a; }
+
         .flex-row { display: flex; gap: 5px; margin: 10px 0; }
         .btn-edad { background: #fff; border: 1px solid #007bff; color: #007bff; flex: 1; font-size: 11px; }
         .btn-edad.selected { background: #007bff; color: white; }
+        
         .resumen-total { font-size: 24px; font-weight: bold; text-align: center; color: #28a745; margin: 15px 0; padding: 10px; border-top: 2px solid #eee; }
         .item-carrito { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; }
         .lista-datos { list-style: none; padding: 0; margin: 0; }
@@ -40,11 +60,9 @@
 
     <div id="pantalla-portada" class="screen active-screen">
         <h2>Menudo App 🍲</h2>
-        
         <button id="btn-sync-global" class="btn-sync" onclick="sincronizarTodo()" style="display:none;">
             🔄 Sincronizar Pendientes (<span id="count-sync">0</span>)
         </button>
-
         <h4 style="margin-bottom:10px; color:#666;">Semanas Guardadas:</h4>
         <ul id="lista-semanas" class="lista-datos"></ul>
         <button class="btn-primary" onclick="cambiarPantalla('pantalla-nueva-semana')">+ Nueva Semana de Captura</button>
@@ -67,6 +85,9 @@
     <div id="pantalla-pedido" class="screen">
         <h3 id="info-cabecera" style="font-size: 12px; color: #666; text-align: center;"></h3>
         <div class="grid-productos" id="grid-prods"></div>
+        
+        <button class="btn-custom" onclick="agregarPersonalizado()">✨ PRODUCTO PERSONALIZADO ($?)</button>
+
         <div class="flex-row">
             <button class="btn-edad" onclick="setEdad('10-20', this)">10-20</button>
             <button class="btn-edad" onclick="setEdad('20-30', this)">20-30</button>
@@ -89,7 +110,6 @@
     <div id="pantalla-resumen" class="screen">
         <h2 id="resumen-titulo"></h2>
         <button class="btn-success" id="btn-re-entrar" style="margin-bottom:15px;">+ Continuar Vendiendo</button>
-        <h3>Pedidos en esta semana:</h3>
         <div id="pedidos-historial" style="max-height: 200px; overflow-y: auto; margin-bottom:15px;">
             <ul id="lista-pedidos-historial" class="lista-datos"></ul>
         </div>
@@ -114,17 +134,9 @@
     let cart = [];
     let edadSel = "No especificado";
 
-    window.onload = () => {
-        renderSemanas();
-        actualizarBotonSync();
-        document.getElementById('input-fecha').valueAsDate = new Date();
-    };
+    window.onload = () => { renderSemanas(); actualizarBotonSync(); document.getElementById('input-fecha').valueAsDate = new Date(); };
 
-    function play(id) { 
-        const s = document.getElementById(id);
-        s.currentTime = 0; 
-        s.play().catch(()=>{}); 
-    }
+    function play(id) { const s = document.getElementById(id); s.currentTime = 0; s.play().catch(()=>{}); }
 
     function cambiarPantalla(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
@@ -133,14 +145,32 @@
         if(id === 'pantalla-carrito') renderCarrito();
     }
 
+    // --- NUEVA FUNCIÓN: AGREGAR PRODUCTO PERSONALIZADO ---
+    function agregarPersonalizado() {
+        play('snd-click');
+        let precio = prompt("¿Cuál es el monto de la venta?", "0");
+        
+        if (precio === null || isNaN(precio) || precio.trim() === "") {
+            alert("Monto inválido");
+            return;
+        }
+
+        let nombre = prompt("¿Qué estás vendiendo? (Opcional)", "");
+        if (nombre === null || nombre.trim() === "") {
+            nombre = "Personalizado";
+        }
+
+        cart.push({ n: nombre, p: parseFloat(precio) });
+        actualizarUI();
+    }
+
     function renderSemanas() {
         const lista = document.getElementById('lista-semanas');
         lista.innerHTML = db.length ? '' : '<li style="text-align:center; color:#999;">No hay semanas.</li>';
         db.forEach((s, i) => {
             const pendientes = s.pedidos.filter(p => !p.sincronizado).length;
             const li = document.createElement('li');
-            li.innerHTML = `<b>Semana: ${s.fecha}</b><br>
-                            <small>Total pedidos: ${s.pedidos.length}</small>
+            li.innerHTML = `<b>Semana: ${s.fecha}</b><br><small>Total pedidos: ${s.pedidos.length}</small>
                             ${pendientes > 0 ? `<span class="badge-sync bg-red">Pendientes: ${pendientes}</span>` : `<span class="badge-sync bg-green">Sincronizado</span>`}`;
             li.onclick = () => verResumenSemana(i);
             lista.appendChild(li);
@@ -150,24 +180,15 @@
     function actualizarBotonSync() {
         let totalPendientes = 0;
         db.forEach(s => totalPendientes += s.pedidos.filter(p => !p.sincronizado).length);
-        
         const btn = document.getElementById('btn-sync-global');
-        if(totalPendientes > 0) {
-            btn.style.display = 'block';
-            document.getElementById('count-sync').innerText = totalPendientes;
-        } else {
-            btn.style.display = 'none';
-        }
+        if(totalPendientes > 0) { btn.style.display = 'block'; document.getElementById('count-sync').innerText = totalPendientes; } 
+        else { btn.style.display = 'none'; }
     }
 
     function guardarNuevaSemana() {
         let f = document.getElementById('input-fecha').value;
         if(!f) return alert("Selecciona fecha");
-        let nueva = { 
-            id: Date.now(), 
-            fecha: f, 
-            pedidos: [] 
-        };
+        let nueva = { id: Date.now(), fecha: f, pedidos: [] };
         db.push(nueva);
         semActiva = nueva;
         localStorage.setItem('menudo_db', JSON.stringify(db));
@@ -177,88 +198,51 @@
 
     function guardarPedidoLocal() {
         if(!cart.length) return alert("Carrito vacío");
-        
         const totalPedido = cart.reduce((a, b) => a + b.p, 0);
         const itemsText = cart.map(i => i.n).join(', ');
-        
-        // Creamos el pedido con la marca sincronizado: false
         const nuevoPedido = {
-            idPedido: Date.now(),
-            idSemana: semActiva.fecha,
-            rangoEdad: edadSel,
+            idPedido: Date.now(), idSemana: semActiva.fecha, rangoEdad: edadSel,
             itemsArray: cart.map(i => ({ nombre: i.n, precio: i.p })),
-            total: totalPedido,
-            itemsText: itemsText,
-            sincronizado: false
+            total: totalPedido, itemsText: itemsText, sincronizado: false
         };
-
-        // Guardar en la DB local
         const idx = db.findIndex(s => s.id === semActiva.id);
         db[idx].pedidos.push(nuevoPedido);
         localStorage.setItem('menudo_db', JSON.stringify(db));
-        
         play('snd-cash');
-        alert("¡Guardado en el celular! (Pendiente de subir)");
-        
-        cart = [];
-        edadSel = "No especificado";
+        alert("¡Guardado localmente!");
+        cart = []; edadSel = "No especificado";
         document.querySelectorAll('.btn-edad').forEach(b => b.classList.remove('selected'));
         actualizarUI();
     }
 
     async function sincronizarTodo() {
         const btn = document.getElementById('btn-sync-global');
-        btn.innerText = "⏳ Subiendo datos...";
-        btn.disabled = true;
-
+        btn.innerText = "⏳ Subiendo datos..."; btn.disabled = true;
         for (let s of db) {
             for (let p of s.pedidos) {
                 if (!p.sincronizado) {
                     try {
-                        const data = {
-                            idSemana: p.idSemana,
-                            rangoEdad: p.rangoEdad,
-                            itemsArray: p.itemsArray,
-                            total: p.total
-                        };
-                        
-                        // Enviamos al Excel
+                        const data = { idSemana: p.idSemana, rangoEdad: p.rangoEdad, itemsArray: p.itemsArray, total: p.total };
                         await fetch(URL_EXCEL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) });
-                        
-                        // Si no hubo error, lo marcamos como sincronizado
                         p.sincronizado = true;
                         localStorage.setItem('menudo_db', JSON.stringify(db));
                     } catch (e) {
-                        alert("Error de conexión. Se detuvo la sincronización.");
-                        actualizarBotonSync();
-                        btn.disabled = false;
-                        return;
+                        alert("Error de conexión."); actualizarBotonSync(); btn.disabled = false; return;
                     }
                 }
             }
         }
-
-        alert("✅ ¡Todo sincronizado con éxito!");
-        renderSemanas();
-        actualizarBotonSync();
-        btn.disabled = false;
+        alert("✅ ¡Sincronizado!"); renderSemanas(); actualizarBotonSync(); btn.disabled = false;
     }
-
-    // --- Resto de funciones de apoyo (prepararPedido, actualizarUI, etc.) ---
 
     function verResumenSemana(i) {
         const s = db[i];
         document.getElementById('resumen-titulo').innerText = "Semana: " + s.fecha;
-        document.getElementById('btn-re-entrar').onclick = () => {
-            semActiva = s;
-            prepararPedido();
-            cambiarPantalla('pantalla-pedido');
-        };
+        document.getElementById('btn-re-entrar').onclick = () => { semActiva = s; prepararPedido(); cambiarPantalla('pantalla-pedido'); };
         const hist = document.getElementById('lista-pedidos-historial');
         hist.innerHTML = s.pedidos.length ? '' : '<li>Sin pedidos.</li>';
         s.pedidos.slice().reverse().forEach(p => {
-            const li = document.createElement('li');
-            li.style.fontSize = "12px";
+            const li = document.createElement('li'); li.style.fontSize = "12px";
             li.innerHTML = `${p.sincronizado ? '✅' : '⏳'} $${p.total} - ${p.itemsText}`;
             hist.appendChild(li);
         });
@@ -270,9 +254,7 @@
         const grid = document.getElementById('grid-prods');
         grid.innerHTML = '';
         CATALOGO.forEach(p => {
-            const b = document.createElement('button');
-            b.className = 'btn-prod';
-            b.innerHTML = `${p.n}<br>$${p.p}`;
+            const b = document.createElement('button'); b.className = 'btn-prod'; b.innerHTML = `${p.n}<br>$${p.p}`;
             b.onclick = () => { play('snd-click'); cart.push({...p}); actualizarUI(); };
             grid.appendChild(b);
         });
