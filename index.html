@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Menudo App PRO v4.7</title>
+    <title>Menudo App PRO v4.8</title>
     <style>
         * { touch-action: manipulation; -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         
@@ -12,15 +12,15 @@
             background: #f0f2f5; 
             margin: 0; 
             padding: 2px; 
-            overflow: hidden; /* Prohibido el scroll */
+            overflow: hidden; /* Bloquea el scroll */
         }
         
         .app-container { 
             max-width: 500px; 
             margin: 0 auto; 
             background: white; 
-            padding: 8px; 
-            border-radius: 10px; 
+            padding: 5px; 
+            border-radius: 8px; 
             height: 99vh; 
             display: flex; 
             flex-direction: column; 
@@ -29,59 +29,67 @@
         .screen { display: none; height: 100%; flex-direction: column; }
         .active-screen { display: flex; }
         
-        h2 { color: #333; text-align: center; margin: 2px 0; font-size: 15px; }
-        h4 { margin: 2px 0; font-size: 11px; color: #666; text-align: center; }
+        h2 { color: #333; text-align: center; margin: 2px 0; font-size: 14px; }
         
-        button { 
-            padding: 5px; margin: 1px 0; border: none; border-radius: 4px; cursor: pointer; 
-            font-size: 10px; width: 100%; font-weight: bold; transition: 0.1s;
-        }
-
-        .btn-primary { background: #007bff; color: white; }
-        .btn-success { background: #28a745; color: white; }
-        .btn-danger { background: #dc3545; color: white; }
-        .btn-secondary { background: #6c757d; color: white; }
-        
-        /* GRID DE 3 COLUMNAS: LA CLAVE DEL ESPACIO */
+        /* BOTONES DE PRODUCTO: ALTURA REDUCIDA AL MÁXIMO */
         .grid-productos { 
             display: grid; 
             grid-template-columns: 1fr 1fr 1fr; 
-            gap: 4px; 
-            margin: 4px 0; 
+            gap: 2px; 
+            margin: 2px 0; 
         }
         .btn-prod { 
             background: #e9ecef; 
             color: #333; 
-            height: 40px; /* Altura optimizada */
-            border: 1px solid #ddd; 
+            height: 32px; /* Aquí está el cambio clave */
+            border: 1px solid #ccc; 
             font-size: 9px; 
-            padding: 2px; 
-            line-height: 1; 
+            padding: 0; 
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 1;
         }
-        .btn-prod:active { background: #ced4da; }
-        
-        .btn-custom { background: #6f42c1 !important; color: white !important; height: 30px; margin: 2px 0; font-size: 10px; }
 
-        /* Edades ultra delgadas */
-        .flex-row { display: flex; gap: 2px; margin: 4px 0; }
+        /* VENTA ESPECIAL COMPACTA */
+        .btn-custom { 
+            background: #6f42c1 !important; 
+            color: white !important; 
+            height: 28px; 
+            margin: 2px 0; 
+            font-size: 10px; 
+            border: none;
+            border-radius: 4px;
+        }
+
+        /* EDADES ULTRA COMPACTAS */
+        .flex-row { display: flex; gap: 2px; margin: 2px 0; }
         .btn-edad { 
             background: #fff; border: 1px solid #007bff; color: #007bff; 
-            padding: 4px 0; font-size: 8px; flex: 1; border-radius: 3px;
+            padding: 3px 0; font-size: 8px; flex: 1; border-radius: 3px; font-weight: bold;
         }
         .btn-edad.selected { background: #007bff; color: white; }
         
-        .resumen-total { font-size: 18px; font-weight: bold; text-align: center; color: #28a745; margin: 2px 0; }
+        .resumen-total { font-size: 16px; font-weight: bold; text-align: center; color: #28a745; margin: 2px 0; }
         
-        /* Grupo de botones al fondo */
+        /* BOTONES DE ACCIÓN: SUBEN PORQUE HAY MÁS ESPACIO */
         .action-group { margin-top: auto; display: flex; flex-direction: column; gap: 2px; }
-        .btn-save-main { padding: 12px; font-size: 13px; }
-        .footer-btns { display: flex; gap: 3px; }
-        .footer-btns button { flex: 1; padding: 8px; font-size: 11px; }
+        .btn-save-main { background: #28a745; color: white; padding: 10px; font-size: 12px; border-radius: 5px; border: none; font-weight: bold; }
+        .footer-btns { display: flex; gap: 2px; }
+        .footer-btns button { 
+            flex: 1; padding: 6px; font-size: 10px; border-radius: 4px; border: none; font-weight: bold;
+        }
+
+        .btn-primary { background: #007bff; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
 
         .lista-datos { list-style: none; padding: 0; margin: 0; overflow-y: auto; flex-grow: 1; }
-        .lista-datos li { background: #f8f9fa; border: 1px solid #ddd; padding: 5px; margin-bottom: 3px; border-radius: 4px; font-size: 10px; }
+        .lista-datos li { background: #f8f9fa; border: 1px solid #ddd; padding: 4px; margin-bottom: 2px; border-radius: 4px; font-size: 10px; }
         
-        input, select { width: 100%; padding: 6px; margin-bottom: 4px; border: 1px solid #ccc; border-radius: 4px; font-size: 11px; }
+        input, select { width: 100%; padding: 5px; margin-bottom: 3px; border: 1px solid #ccc; border-radius: 4px; font-size: 11px; }
     </style>
 </head>
 <body>
@@ -94,7 +102,7 @@
         <h2>Menudo App 🍲</h2>
         <button id="btn-sync-global" class="btn-primary" onclick="sincronizarTodo()" style="display:none; background:#ffc107; color:#333; margin-bottom:5px;">🔄 Sync Pendientes (<span id="count-sync">0</span>)</button>
         <ul id="lista-semanas" class="lista-datos"></ul>
-        <button class="btn-primary" style="margin-top:5px;" onclick="cambiarPantalla('pantalla-nueva-semana')">+ Nueva Semana</button>
+        <button class="btn-primary" onclick="cambiarPantalla('pantalla-nueva-semana')">+ Nueva Semana</button>
     </div>
 
     <div id="pantalla-nueva-semana" class="screen">
@@ -112,7 +120,7 @@
     </div>
 
     <div id="pantalla-pedido" class="screen">
-        <h3 id="info-cabecera" style="font-size: 9px; color: #666; text-align: center; margin: 0;"></h3>
+        <h4 id="info-cabecera" style="margin: 0;"></h4>
         
         <div class="grid-productos" id="grid-prods"></div>
 
@@ -129,7 +137,7 @@
         <div class="resumen-total">Total: $<span id="txt-total">0</span></div>
 
         <div class="action-group">
-            <button class="btn-success btn-save-main" id="btn-save" onclick="guardarPedidoLocal()">💾 GUARDAR PEDIDO</button>
+            <button class="btn-save-main" id="btn-save" onclick="guardarPedidoLocal()">💾 GUARDAR PEDIDO</button>
             <div class="footer-btns">
                 <button class="btn-primary" onclick="cambiarPantalla('pantalla-carrito')">🛒 Carrito (<span id="count-cart">0</span>)</button>
                 <button class="btn-secondary" onclick="cerrarSesionPedido()">🏠 Inicio</button>
@@ -148,7 +156,7 @@
 
     <div id="pantalla-resumen" class="screen">
         <h2 id="resumen-titulo"></h2>
-        <button class="btn-success" id="btn-re-entrar" style="padding:6px;">+ Vender</button>
+        <button class="btn-success" id="btn-re-entrar" style="padding:5px;">+ Vender</button>
         <ul id="lista-pedidos-historial" class="lista-datos"></ul>
         <button class="btn-secondary" style="margin-top:auto;" onclick="cambiarPantalla('pantalla-portada')">Cerrar</button>
     </div>
@@ -159,15 +167,14 @@
         if (tipo === 'click') {
             const s = document.getElementById('snd-click');
             s.currentTime = 0; s.play().catch(()=>{});
-            if (navigator.vibrate) navigator.vibrate(25);
+            if (navigator.vibrate) navigator.vibrate(20);
         } else if (tipo === 'cash') {
             const s = document.getElementById('snd-cash');
             s.currentTime = 0; s.play().catch(()=>{});
-            if (navigator.vibrate) navigator.vibrate([60, 30, 60]);
+            if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
         }
     }
 
-    // BLOQUEO ZOOM
     document.addEventListener('touchstart', (e) => { if (e.touches.length > 1) e.preventDefault(); }, { passive: false });
     let lastT = 0;
     document.addEventListener('touchend', (e) => {
@@ -178,12 +185,10 @@
 
     const URL_EXCEL = 'https://script.google.com/macros/s/AKfycbz-_Dw2_ZULveE9QNxKkAzJyJ2XZF4Okca9CUsiJmj4MxY2KWwBak9qVGBCWM7apeHk/exec';
     const CATALOGO = [
-        { n: '1 Litro', p: 140 }, { n: '1/2 Litro', p: 70 },
-        { n: 'Pezuña', p: 35 }, { n: 'Caldo 1/2', p: 25 },
-        { n: 'Caldo 1 Lit', p: 45 }, { n: 'Hueso Ch', p: 25 },
-        { n: 'Hueso Gde', p: 35 }, { n: 'Vasija $200', p: 200 },
-        { n: 'Vasija 1 Lit', p: 140 }, { n: 'Vasija 1/2 Lit', p: 70 },
-        { n: 'Vasija $300', p: 300 }, { n: 'Vasija 2 Lit', p: 280 }
+        { n: '1 Litro', p: 140 }, { n: '1/2 Lit', p: 70 }, { n: 'Pezuña', p: 35 }, 
+        { n: 'Cald 1/2', p: 25 }, { n: 'Cald 1L', p: 45 }, { n: 'Hue Ch', p: 25 }, 
+        { n: 'Hue Gde', p: 35 }, { n: 'Vas $200', p: 200 }, { n: 'Vas 1L', p: 140 }, 
+        { n: 'Vas 1/2', p: 70 }, { n: 'Vas $300', p: 300 }, { n: 'Vas 2L', p: 280 }
     ];
 
     let db = JSON.parse(localStorage.getItem('menudo_db')) || [];
@@ -201,48 +206,47 @@
 
     function agregarPersonalizado() {
         feedback('click');
-        let precio = prompt("Monto $$:", "");
-        if (!precio || isNaN(precio)) return;
-        let nombre = prompt("Concepto:", "");
-        if (!nombre) nombre = "Personalizado";
-        cart.push({ n: nombre, p: parseFloat(precio) });
+        let p = prompt("Monto $$:", "");
+        if (!p || isNaN(p)) return;
+        let n = prompt("Concepto:", "");
+        if (!n) n = "Personalizado";
+        cart.push({ n: n, p: parseFloat(p) });
         actualizarUI();
     }
 
     function renderSemanas() {
-        const lista = document.getElementById('lista-semanas');
-        lista.innerHTML = db.length ? '' : '<li style="text-align:center; font-size:10px;">Sin semanas</li>';
+        const l = document.getElementById('lista-semanas');
+        l.innerHTML = db.length ? '' : '<li style="text-align:center; font-size:9px;">Vacío</li>';
         db.forEach((s, i) => {
             const p = s.pedidos.filter(pd => !pd.sincronizado).length;
             const li = document.createElement('li');
             li.innerHTML = `<b>${s.fecha}</b> | ${s.pedidos.length} peds ${p > 0 ? `<span style="color:red">(${p})</span>` : '✅'}`;
             li.onclick = () => { feedback('click'); verResumenSemana(i); };
-            lista.appendChild(li);
+            l.appendChild(li);
         });
     }
 
     function prepararPedido() {
-        document.getElementById('info-cabecera').innerText = `Capturando: ${semActiva.fecha}`;
-        const grid = document.getElementById('grid-prods');
-        grid.innerHTML = '';
+        document.getElementById('info-cabecera').innerText = `Venta: ${semActiva.fecha}`;
+        const g = document.getElementById('grid-prods');
+        g.innerHTML = '';
         CATALOGO.forEach(p => {
             const b = document.createElement('button');
             b.className = 'btn-prod';
             b.innerHTML = `${p.n}<br>$${p.p}`;
             b.onclick = () => { feedback('click'); cart.push({...p}); actualizarUI(); };
-            grid.appendChild(b);
+            g.appendChild(b);
         });
         actualizarUI();
     }
 
     function guardarPedidoLocal() {
-        if(!cart.length) return alert("¡Carrito vacío!");
-        const tot = cart.reduce((a, b) => a + b.p, 0);
+        if(!cart.length) return alert("¡Vacío!");
         const idx = db.findIndex(s => s.id === semActiva.id);
         db[idx].pedidos.push({
             idPedido: Date.now(), idSemana: semActiva.fecha, rangoEdad: edadSel,
             itemsArray: cart.map(i => ({ nombre: i.n, precio: i.p })),
-            total: tot, itemsText: cart.map(i => i.n).join(', '), sincronizado: false
+            total: cart.reduce((a, b) => a + b.p, 0), itemsText: cart.map(i => i.n).join(', '), sincronizado: false
         });
         localStorage.setItem('menudo_db', JSON.stringify(db));
         feedback('cash');
