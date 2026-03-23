@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Menudo App PRO v5.0 - Classic Size</title>
+    <title>Menudo App PRO v5.1 - Fine Tuned</title>
     <style>
         /* Bloqueo de zoom y optimización táctil */
         * { touch-action: manipulation; -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
@@ -12,7 +12,7 @@
             font-family: 'Segoe UI', sans-serif; 
             background: #f0f2f5; 
             margin: 0; 
-            padding: 15px; /* Espacio generoso a los lados */
+            padding: 15px; 
         }
         
         .app-container { max-width: 500px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
@@ -21,8 +21,9 @@
         
         h2 { color: #333; text-align: center; margin-bottom: 20px; font-size: 24px; }
         
+        /* Ajuste de margen general de botones para que no se separen tanto */
         button { 
-            padding: 15px; margin: 8px 0; border: none; border-radius: 10px; cursor: pointer; 
+            padding: 12px; margin: 4px 0; border: none; border-radius: 10px; cursor: pointer; 
             font-size: 16px; width: 100%; font-weight: bold; transition: 0.2s;
         }
 
@@ -32,32 +33,38 @@
         .btn-secondary { background: #6c757d; color: white; }
         .btn-sync { background: #ffc107; color: #333; border: 2px solid #e0a800; margin-bottom: 20px; }
         
-        /* REGRESAMOS A 2 COLUMNAS (BOTONES GRANDES) */
+        /* CENTRADO PERFECTO EN BOTONES DE PRODUCTO */
         .grid-productos { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin: 10px 0; }
-        .btn-prod { background: #e9ecef; color: #333; height: 40px; border: 1px solid #ddd; font-size: 14px; }
+        .btn-prod { 
+            background: #e9ecef; color: #333; height: 42px; border: 1px solid #ddd; font-size: 13px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; /* Centrado total */
+            line-height: 1.1; 
+        }
         .btn-prod:active { transform: scale(0.95); background: #d1d5db; }
         
-        /* BOTÓN ESPECIAL GRANDE */
-        .btn-custom { background: #6f42c1 !important; color: white !important; height: 45px; margin-bottom: 15px; }
+        .btn-custom { background: #6f42c1 !important; color: white !important; height: 40px; margin-bottom: 5px; }
 
-        /* RANGOS DE EDAD CLÁSICOS */
-        .flex-row { display: flex; gap: 8px; margin: 10px 0; }
+        .flex-row { display: flex; gap: 5px; margin: 5px 0; }
         .btn-edad { 
             background: #fff; border: 1px solid #007bff; color: #007bff; 
-            padding: 10px 2px; font-size: 11px; flex: 1; min-width: 0;
+            padding: 8px 2px; font-size: 10px; flex: 1; min-width: 0;
         }
         .btn-edad.selected { background: #007bff; color: white; }
         
-        .resumen-total { font-size: 28px; font-weight: bold; text-align: center; color: #28a745; margin: 10px 0; padding: 15px; border-top: 2px solid #eee; }
+        /* TOTAL MÁS COMPACTO */
+        .resumen-total { 
+            font-size: 26px; font-weight: bold; text-align: center; color: #28a745; 
+            margin: 5px 0; padding: 5px; border-top: 1px solid #eee; 
+        }
         
+        /* Botones de acción pegados */
+        #btn-save { margin-top: 0; margin-bottom: 5px; }
+
         .item-carrito { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #eee; font-size: 16px; }
         .lista-datos { list-style: none; padding: 0; margin: 0; }
-        .lista-datos li { background: #f8f9fa; border: 1px solid #ddd; padding: 18px; margin-bottom: 12px; border-radius: 10px; }
+        .lista-datos li { background: #f8f9fa; border: 1px solid #ddd; padding: 18px; margin-bottom: 10px; border-radius: 10px; }
         
         input, select { width: 100%; padding: 15px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
-        .badge-sync { font-size: 11px; padding: 3px 8px; border-radius: 12px; margin-left: 8px; }
-        .bg-red { background: #dc3545; color: white; }
-        .bg-green { background: #28a745; color: white; }
     </style>
 </head>
 <body>
@@ -76,22 +83,8 @@
         <button class="btn-primary" onclick="cambiarPantalla('pantalla-nueva-semana')">+ Nueva Semana de Captura</button>
     </div>
 
-    <div id="pantalla-nueva-semana" class="screen">
-        <h2>Configurar Semana</h2>
-        <input type="date" id="input-fecha">
-        <input type="number" id="input-temp" placeholder="Temp °C">
-        <select id="input-clima">
-            <option value="Soleado">☀️ Soleado</option>
-            <option value="Nublado">☁️ Nublado</option>
-            <option value="Lluvioso">🌧️ Lluvioso</option>
-            <option value="Frío">❄️ Frío</option>
-        </select>
-        <button class="btn-success" onclick="guardarNuevaSemana()">Iniciar Captura</button>
-        <button class="btn-secondary" onclick="cambiarPantalla('pantalla-portada')">Volver</button>
-    </div>
-
     <div id="pantalla-pedido" class="screen">
-        <h3 id="info-cabecera" style="font-size: 14px; color: #666; text-align: center; margin-bottom: 10px;"></h3>
+        <h3 id="info-cabecera" style="font-size: 12px; color: #666; text-align: center; margin-bottom: 5px;"></h3>
         <div class="grid-productos" id="grid-prods"></div>
         
         <button class="btn-custom" onclick="agregarPersonalizado()">✨ VENTA ESPECIAL ($?)</button>
@@ -105,9 +98,10 @@
         </div>
 
         <div class="resumen-total">Total: $<span id="txt-total">0</span></div>
-        <button class="btn-success" id="btn-save" style="margin-bottom:10px; font-size: 18px;" onclick="guardarPedidoLocal()">💾 GUARDAR PEDIDO</button>
         
-        <div style="display:flex; gap:10px;">
+        <button class="btn-success" id="btn-save" onclick="guardarPedidoLocal()">💾 GUARDAR PEDIDO</button>
+        
+        <div style="display:flex; gap:5px;">
             <button class="btn-primary" onclick="cambiarPantalla('pantalla-carrito')">🛒 Carrito (<span id="count-cart">0</span>)</button>
             <button class="btn-secondary" onclick="cerrarSesionPedido()">Inicio</button>
         </div>
@@ -118,6 +112,20 @@
         <div id="lista-carrito"></div>
         <button class="btn-primary" style="margin-top:20px;" onclick="cambiarPantalla('pantalla-pedido')">Volver</button>
         <button class="btn-danger" style="margin-top:10px;" onclick="vaciarCarrito()">Vaciar Todo</button>
+    </div>
+
+    <div id="pantalla-nueva-semana" class="screen">
+        <h2>Configurar Semana</h2>
+        <input type="date" id="input-fecha">
+        <input type="number" id="input-temp" placeholder="Temp °C">
+        <select id="input-clima">
+            <option value="Soleado">☀️ Soleado</option>
+            <option value="Nublado">☁️ Nublado</option>
+            <option value="Lluvioso">🌧️ Lluvioso</option>
+            <option value="Frío">❄️ Frío</option>
+        </select>
+        <button class="btn-success" onclick="guardarNuevaSemana()">Iniciar Captura</button>
+        <button class="btn-secondary" onclick="cambiarPantalla('pantalla-portada')">Volver</button>
     </div>
 
     <div id="pantalla-resumen" class="screen">
@@ -183,7 +191,7 @@
             const p = s.pedidos.filter(pd => !pd.sincronizado).length;
             const li = document.createElement('li');
             li.innerHTML = `<b>Semana: ${s.fecha}</b><br><small>Pedidos: ${s.pedidos.length}</small>
-                            ${p > 0 ? `<span class="badge-sync bg-red">Pendientes: ${p}</span>` : `<span class="badge-sync bg-green">Sincronizado</span>`}`;
+                            ${p > 0 ? `<span class="badge-sync bg-red">Pend: ${p}</span>` : `<span class="badge-sync bg-green">OK</span>`}`;
             li.onclick = () => verResumenSemana(i);
             lista.appendChild(li);
         });
@@ -196,7 +204,7 @@
         CATALOGO.forEach(p => {
             const b = document.createElement('button');
             b.className = 'btn-prod';
-            b.innerHTML = `${p.n}<br>$${p.p}`;
+            b.innerHTML = `<span>${p.n}</span><span>$${p.p}</span>`;
             b.onclick = () => { feedback('click'); cart.push({...p}); actualizarUI(); };
             grid.appendChild(b);
         });
@@ -214,7 +222,7 @@
         });
         localStorage.setItem('menudo_db', JSON.stringify(db));
         feedback('cash');
-        alert("¡Guardado! Recuerda sincronizar luego.");
+        alert("¡Guardado!");
         cart = []; edadSel = "No especificado";
         document.querySelectorAll('.btn-edad').forEach(b => b.classList.remove('selected'));
         actualizarUI();
@@ -222,7 +230,7 @@
 
     async function sincronizarTodo() {
         const btn = document.getElementById('btn-sync-global');
-        btn.innerText = "⏳ Subiendo datos..."; btn.disabled = true;
+        btn.innerText = "⏳..."; btn.disabled = true;
         for (let s of db) {
             for (let p of s.pedidos) {
                 if (!p.sincronizado) {
@@ -231,21 +239,21 @@
                         await fetch(URL_EXCEL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(d) });
                         p.sincronizado = true;
                         localStorage.setItem('menudo_db', JSON.stringify(db));
-                    } catch (e) { alert("Error al subir. Revisa tu internet."); btn.disabled = false; return; }
+                    } catch (e) { alert("Error red"); btn.disabled = false; return; }
                 }
             }
         }
-        alert("✅ ¡Todo subido al Excel!"); renderSemanas(); actualizarBotonSync(); btn.disabled = false;
+        alert("✅ Sincronizado"); renderSemanas(); actualizarBotonSync(); btn.disabled = false;
     }
 
     function setEdad(v, b) { feedback('click'); edadSel = v; document.querySelectorAll('.btn-edad').forEach(btn => btn.classList.remove('selected')); b.classList.add('selected'); }
     function actualizarUI() { document.getElementById('txt-total').innerText = cart.reduce((a, b) => a + b.p, 0); document.getElementById('count-cart').innerText = cart.length; }
-    function renderCarrito() { const cont = document.getElementById('lista-carrito'); cont.innerHTML = cart.length ? '' : '<p>El carrito está vacío</p>'; cart.forEach((item, i) => { const div = document.createElement('div'); div.className = 'item-carrito'; div.innerHTML = `<span>${item.n} ($${item.p})</span><button class="btn-danger" style="width:auto; padding:8px 15px;" onclick="quitar(${i})">Borrar</button>`; cont.appendChild(div); }); }
+    function renderCarrito() { const cont = document.getElementById('lista-carrito'); cont.innerHTML = cart.length ? '' : '<p>Vacío</p>'; cart.forEach((item, i) => { const div = document.createElement('div'); div.className = 'item-carrito'; div.innerHTML = `<span>${item.n} ($${item.p})</span><button class="btn-danger" style="width:auto; padding:8px 15px;" onclick="quitar(${i})">X</button>`; cont.appendChild(div); }); }
     function quitar(i) { feedback('click'); cart.splice(i, 1); renderCarrito(); actualizarUI(); }
     function vaciarCarrito() { feedback('click'); cart = []; actualizarUI(); cambiarPantalla('pantalla-pedido'); }
     function cerrarSesionPedido() { feedback('click'); semActiva = null; cart = []; cambiarPantalla('pantalla-portada'); }
-    function guardarNuevaSemana() { feedback('click'); let f = document.getElementById('input-fecha').value; if(!f) return alert("Elige fecha"); let n = { id: Date.now(), fecha: f, pedidos: [] }; db.push(n); semActiva = n; localStorage.setItem('menudo_db', JSON.stringify(db)); prepararPedido(); cambiarPantalla('pantalla-pedido'); }
-    function verResumenSemana(i) { const s = db[i]; document.getElementById('resumen-titulo').innerText = "Sem: " + s.fecha; document.getElementById('btn-re-entrar').onclick = () => { feedback('click'); semActiva = s; prepararPedido(); cambiarPantalla('pantalla-pedido'); }; const h = document.getElementById('lista-pedidos-historial'); h.innerHTML = s.pedidos.length ? '' : '<li>Aún no hay ventas.</li>'; s.pedidos.slice().reverse().forEach(p => { const li = document.createElement('li'); li.innerHTML = `${p.sincronizado ? '✅' : '⏳'} $${p.total} - ${p.itemsText}`; h.appendChild(li); }); cambiarPantalla('pantalla-resumen'); }
+    function guardarNuevaSemana() { feedback('click'); let f = document.getElementById('input-fecha').value; if(!f) return alert("Fecha!"); let n = { id: Date.now(), fecha: f, pedidos: [] }; db.push(n); semActiva = n; localStorage.setItem('menudo_db', JSON.stringify(db)); prepararPedido(); cambiarPantalla('pantalla-pedido'); }
+    function verResumenSemana(i) { const s = db[i]; document.getElementById('resumen-titulo').innerText = "Sem: " + s.fecha; document.getElementById('btn-re-entrar').onclick = () => { feedback('click'); semActiva = s; prepararPedido(); cambiarPantalla('pantalla-pedido'); }; const h = document.getElementById('lista-pedidos-historial'); h.innerHTML = s.pedidos.length ? '' : '<li>Vacío.</li>'; s.pedidos.slice().reverse().forEach(p => { const li = document.createElement('li'); li.innerHTML = `${p.sincronizado ? '✅' : '⏳'} $${p.total} - ${p.itemsText}`; h.appendChild(li); }); cambiarPantalla('pantalla-resumen'); }
     function actualizarBotonSync() { let tp = 0; db.forEach(s => tp += s.pedidos.filter(p => !p.sincronizado).length); const btn = document.getElementById('btn-sync-global'); if(tp > 0) { btn.style.display = 'block'; document.getElementById('count-sync').innerText = tp; } else { btn.style.display = 'none'; } }
 </script>
 </body>
