@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Menudo App PRO v5.1 - Fine Tuned</title>
+    <title>Menudo App PRO v5.2 - Color Coded</title>
     <style>
-        /* Bloqueo de zoom y optimización táctil */
         * { touch-action: manipulation; -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         
         body { 
@@ -21,7 +20,6 @@
         
         h2 { color: #333; text-align: center; margin-bottom: 20px; font-size: 24px; }
         
-        /* Ajuste de margen general de botones para que no se separen tanto */
         button { 
             padding: 12px; margin: 4px 0; border: none; border-radius: 10px; cursor: pointer; 
             font-size: 16px; width: 100%; font-weight: bold; transition: 0.2s;
@@ -33,14 +31,21 @@
         .btn-secondary { background: #6c757d; color: white; }
         .btn-sync { background: #ffc107; color: #333; border: 2px solid #e0a800; margin-bottom: 20px; }
         
-        /* CENTRADO PERFECTO EN BOTONES DE PRODUCTO */
         .grid-productos { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin: 10px 0; }
+        
+        /* ESTILOS DE BOTONES POR COLOR */
         .btn-prod { 
-            background: #e9ecef; color: #333; height: 42px; border: 1px solid #ddd; font-size: 13px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center; /* Centrado total */
+            height: 45px; border: 1px solid #ddd; font-size: 13px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
             line-height: 1.1; 
         }
-        .btn-prod:active { transform: scale(0.95); background: #d1d5db; }
+        .btn-prod span { font-size: 10px; opacity: 0.8; } /* Para el icono */
+        
+        .btn-blanco { background: #ffffff; color: #333; }
+        .btn-gris { background: #e9ecef; color: #333; }
+        .btn-amarillo { background: #ffeb3b; color: #333; border-color: #fdd835; }
+        
+        .btn-prod:active { transform: scale(0.95); opacity: 0.8; }
         
         .btn-custom { background: #6f42c1 !important; color: white !important; height: 40px; margin-bottom: 5px; }
 
@@ -51,13 +56,8 @@
         }
         .btn-edad.selected { background: #007bff; color: white; }
         
-        /* TOTAL MÁS COMPACTO */
-        .resumen-total { 
-            font-size: 26px; font-weight: bold; text-align: center; color: #28a745; 
-            margin: 5px 0; padding: 5px; border-top: 1px solid #eee; 
-        }
+        .resumen-total { font-size: 26px; font-weight: bold; text-align: center; color: #28a745; margin: 5px 0; padding: 5px; border-top: 1px solid #eee; }
         
-        /* Botones de acción pegados */
         #btn-save { margin-top: 0; margin-bottom: 5px; }
 
         .item-carrito { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #eee; font-size: 16px; }
@@ -78,7 +78,6 @@
         <button id="btn-sync-global" class="btn-sync" onclick="sincronizarTodo()" style="display:none;">
             🔄 Sincronizar Pedidos (<span id="count-sync">0</span>)
         </button>
-        <h4 style="margin-bottom:10px; color:#666;">Semanas Guardadas:</h4>
         <ul id="lista-semanas" class="lista-datos"></ul>
         <button class="btn-primary" onclick="cambiarPantalla('pantalla-nueva-semana')">+ Nueva Semana de Captura</button>
     </div>
@@ -98,7 +97,6 @@
         </div>
 
         <div class="resumen-total">Total: $<span id="txt-total">0</span></div>
-        
         <button class="btn-success" id="btn-save" onclick="guardarPedidoLocal()">💾 GUARDAR PEDIDO</button>
         
         <div style="display:flex; gap:5px;">
@@ -152,13 +150,14 @@
     }
 
     const URL_EXCEL = 'https://script.google.com/macros/s/AKfycbz-_Dw2_ZULveE9QNxKkAzJyJ2XZF4Okca9CUsiJmj4MxY2KWwBak9qVGBCWM7apeHk/exec';
+    
+    // CATALOGO CON NOMBRES AJUSTADOS A TU PETICIÓN
     const CATALOGO = [
         { n: '1 Litro', p: 140 }, { n: '1/2 Litro', p: 70 },
-        { n: 'Pezuña', p: 35 }, { n: 'Caldo 1/2', p: 25 },
-        { n: 'Caldo 1 Lit', p: 45 }, { n: 'Hueso Ch', p: 25 },
-        { n: 'Hueso Gde', p: 35 }, { n: 'Vasija $200', p: 200 },
-        { n: 'Vasija 1 Lit', p: 140 }, { n: 'Vasija 1/2 Lit', p: 70 },
-        { n: 'Vasija $300', p: 300 }, { n: 'Vasija 2 Lit', p: 280 }
+        { n: 'Vasija 2 Lit', p: 280 }, { n: 'Vasija 1/2 Lit', p: 70 },
+        { n: 'Vasija $200', p: 200 }, { n: 'Vasija $300', p: 300 },
+        { n: 'Pezuña', p: 35 }, { n: 'Hueso Ch', p: 25 }, { n: 'Hueso Gdo', p: 35 },
+        { n: 'Caldo 1/2', p: 25 }, { n: 'Caldo 1 Lit', p: 45 }, { n: 'Vasija 1 Lit', p: 140 }
     ];
 
     let db = JSON.parse(localStorage.getItem('menudo_db')) || [];
@@ -201,10 +200,26 @@
         document.getElementById('info-cabecera').innerText = `Venta: ${semActiva.fecha}`;
         const grid = document.getElementById('grid-prods');
         grid.innerHTML = '';
+        
         CATALOGO.forEach(p => {
             const b = document.createElement('button');
             b.className = 'btn-prod';
-            b.innerHTML = `<span>${p.n}</span><span>$${p.p}</span>`;
+            
+            // LÓGICA DE COLORES E ICONOS
+            if (p.n.includes('Vasija')) {
+                b.classList.add('btn-gris');
+                b.innerHTML = `<span>🏺</span>${p.n}<br>$${p.p}`;
+            } else if (p.n === 'Pezuña' || p.n.includes('Hueso')) {
+                b.classList.add('btn-amarillo');
+                b.innerHTML = `<span>🦴</span>${p.n}<br>$${p.p}`;
+            } else if (p.n.includes('Litro')) {
+                b.classList.add('btn-blanco');
+                b.innerHTML = `<span>🥤</span>${p.n}<br>$${p.p}`;
+            } else {
+                b.classList.add('btn-gris'); // Resto (Caldo, etc.)
+                b.innerHTML = `${p.n}<br>$${p.p}`;
+            }
+
             b.onclick = () => { feedback('click'); cart.push({...p}); actualizarUI(); };
             grid.appendChild(b);
         });
