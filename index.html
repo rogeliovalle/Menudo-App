@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Menudo App PRO v5.2 - Color Coded</title>
+    <title>Menudo App PRO v5.4</title>
     <style>
         * { touch-action: manipulation; -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         
@@ -31,23 +31,23 @@
         .btn-secondary { background: #6c757d; color: white; }
         .btn-sync { background: #ffc107; color: #333; border: 2px solid #e0a800; margin-bottom: 20px; }
         
-        .grid-productos { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin: 10px 0; }
+        .grid-productos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0; }
         
-        /* ESTILOS DE BOTONES POR COLOR */
         .btn-prod { 
-            height: 45px; border: 1px solid #ddd; font-size: 13px;
+            height: 55px; border: 1px solid #ddd; font-size: 14px;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             line-height: 1.1; 
         }
-        .btn-prod span { font-size: 10px; opacity: 0.8; } /* Para el icono */
+        .btn-prod span.icon { font-size: 18px; margin-bottom: 2px; }
         
+        /* Colores de grupos */
         .btn-blanco { background: #ffffff; color: #333; }
         .btn-gris { background: #e9ecef; color: #333; }
         .btn-amarillo { background: #ffeb3b; color: #333; border-color: #fdd835; }
         
         .btn-prod:active { transform: scale(0.95); opacity: 0.8; }
         
-        .btn-custom { background: #6f42c1 !important; color: white !important; height: 40px; margin-bottom: 5px; }
+        .btn-custom { background: #6f42c1 !important; color: white !important; height: 45px; margin-bottom: 5px; }
 
         .flex-row { display: flex; gap: 5px; margin: 5px 0; }
         .btn-edad { 
@@ -151,13 +151,27 @@
 
     const URL_EXCEL = 'https://script.google.com/macros/s/AKfycbz-_Dw2_ZULveE9QNxKkAzJyJ2XZF4Okca9CUsiJmj4MxY2KWwBak9qVGBCWM7apeHk/exec';
     
-    // CATALOGO CON NOMBRES AJUSTADOS A TU PETICIÓN
+    // CATALOGO MAESTRO: 'n' es lo que ve el Excel, 'label' es lo que ves tú en el botón
     const CATALOGO = [
-        { n: '1 Litro', p: 140 }, { n: '1/2 Litro', p: 70 },
-        { n: 'Vasija 2 Lit', p: 280 }, { n: 'Vasija 1/2 Lit', p: 70 },
-        { n: 'Vasija $200', p: 200 }, { n: 'Vasija $300', p: 300 },
-        { n: 'Pezuña', p: 35 }, { n: 'Hueso Ch', p: 25 }, { n: 'Hueso Gdo', p: 35 },
-        { n: 'Caldo 1/2', p: 25 }, { n: 'Caldo 1 Lit', p: 45 }, { n: 'Vasija 1 Lit', p: 140 }
+        // Litros (Blanco)
+        { n: '1 Litro', label: '🥛 1 Litro', p: 140, color: 'btn-blanco' },
+        { n: '1/2 Litro', label: '🥛 1/2 Litro', p: 70, color: 'btn-blanco' },
+        
+        // Vasijas juntas (Gris)
+        { n: 'Vasija 2 Lit', label: '🏺 2Lit', p: 280, color: 'btn-gris' },
+        { n: 'Vasija 1/2 Lit', label: '🏺 1/2 Lit', p: 70, color: 'btn-gris' },
+        { n: 'Vasija $200', label: '🏺 $200', p: 200, color: 'btn-gris' },
+        { n: 'Vasija $300', label: '🏺 $300', p: 300, color: 'btn-gris' },
+        { n: 'Vasija 1 Lit', label: '🏺 1 Lit', p: 140, color: 'btn-gris' },
+
+        // Huesos y Pezuña (Amarillo)
+        { n: 'Pezuña', label: '🍖 $35', p: 35, color: 'btn-amarillo' },
+        { n: 'Hueso Ch', label: '🦴 Ch', p: 25, color: 'btn-amarillo' },
+        { n: 'Hueso Gdo', label: '🦴 Gdo', p: 35, color: 'btn-amarillo' },
+
+        // Otros
+        { n: 'Caldo 1/2', label: '🥣 Caldo 1/2', p: 25, color: 'btn-gris' },
+        { n: 'Caldo 1 Lit', label: '🥣 Caldo 1 Lit', p: 45, color: 'btn-gris' }
     ];
 
     let db = JSON.parse(localStorage.getItem('menudo_db')) || [];
@@ -203,24 +217,14 @@
         
         CATALOGO.forEach(p => {
             const b = document.createElement('button');
-            b.className = 'btn-prod';
-            
-            // LÓGICA DE COLORES E ICONOS
-            if (p.n.includes('Vasija')) {
-                b.classList.add('btn-gris');
-                b.innerHTML = `<span>🏺</span>${p.n}<br>$${p.p}`;
-            } else if (p.n === 'Pezuña' || p.n.includes('Hueso')) {
-                b.classList.add('btn-amarillo');
-                b.innerHTML = `<span>🦴</span>${p.n}<br>$${p.p}`;
-            } else if (p.n.includes('Litro')) {
-                b.classList.add('btn-blanco');
-                b.innerHTML = `<span>🥤</span>${p.n}<br>$${p.p}`;
-            } else {
-                b.classList.add('btn-gris'); // Resto (Caldo, etc.)
-                b.innerHTML = `${p.n}<br>$${p.p}`;
-            }
-
-            b.onclick = () => { feedback('click'); cart.push({...p}); actualizarUI(); };
+            b.className = 'btn-prod ' + p.color;
+            b.innerHTML = `${p.label}<br>$${p.p}`;
+            b.onclick = () => { 
+                feedback('click'); 
+                // IMPORTANTE: Al carrito mandamos 'p.n' que es el nombre real para el Excel
+                cart.push({ n: p.n, p: p.p }); 
+                actualizarUI(); 
+            };
             grid.appendChild(b);
         });
         actualizarUI();
@@ -267,7 +271,7 @@
     function quitar(i) { feedback('click'); cart.splice(i, 1); renderCarrito(); actualizarUI(); }
     function vaciarCarrito() { feedback('click'); cart = []; actualizarUI(); cambiarPantalla('pantalla-pedido'); }
     function cerrarSesionPedido() { feedback('click'); semActiva = null; cart = []; cambiarPantalla('pantalla-portada'); }
-    function guardarNuevaSemana() { feedback('click'); let f = document.getElementById('input-fecha').value; if(!f) return alert("Fecha!"); let n = { id: Date.now(), fecha: f, pedidos: [] }; db.push(n); semActiva = n; localStorage.setItem('menudo_db', JSON.stringify(db)); prepararPedido(); cambiarPantalla('pantalla-pedido'); }
+    function guardarNuevaSemana() { feedback('click'); let f = document.getElementById('input-fecha').value; if(!f) return alert("¡Fecha!"); let n = { id: Date.now(), fecha: f, pedidos: [] }; db.push(n); semActiva = n; localStorage.setItem('menudo_db', JSON.stringify(db)); prepararPedido(); cambiarPantalla('pantalla-pedido'); }
     function verResumenSemana(i) { const s = db[i]; document.getElementById('resumen-titulo').innerText = "Sem: " + s.fecha; document.getElementById('btn-re-entrar').onclick = () => { feedback('click'); semActiva = s; prepararPedido(); cambiarPantalla('pantalla-pedido'); }; const h = document.getElementById('lista-pedidos-historial'); h.innerHTML = s.pedidos.length ? '' : '<li>Vacío.</li>'; s.pedidos.slice().reverse().forEach(p => { const li = document.createElement('li'); li.innerHTML = `${p.sincronizado ? '✅' : '⏳'} $${p.total} - ${p.itemsText}`; h.appendChild(li); }); cambiarPantalla('pantalla-resumen'); }
     function actualizarBotonSync() { let tp = 0; db.forEach(s => tp += s.pedidos.filter(p => !p.sincronizado).length); const btn = document.getElementById('btn-sync-global'); if(tp > 0) { btn.style.display = 'block'; document.getElementById('count-sync').innerText = tp; } else { btn.style.display = 'none'; } }
 </script>
