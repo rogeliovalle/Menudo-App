@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Menudo App PRO v6.0</title>
+    <title>Menudo App PRO v6.2</title>
     <style>
         /* Bloqueo de zoom y optimización táctil */
         * { touch-action: manipulation; -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
@@ -95,7 +95,7 @@
     <div id="pantalla-portada" class="screen active-screen">
         <h2>Menudo App 🍲</h2>
         <button id="btn-sync-global" class="btn-sync" onclick="sincronizarTodo()" style="display:none;">
-            🔄 Sincronizar Pedidos (<span id="count-sync">0</span>)
+            🔄 Sincronizar Pendientes (<span id="count-sync">0</span>)
         </button>
         <h4 style="margin-bottom:10px;">Semanas Guardadas:</h4>
         <ul id="lista-semanas" class="lista-datos"></ul>
@@ -153,21 +153,21 @@
 </div>
 
 <script>
-    const URL_EXCEL = 'https://script.google.com/macros/s/AKfycbx641sqmxUyOVgJbRjRzbqxHG3DZazozKGZWzeNdUFfw2RY9zc9GP51XfGgruejmyxB/exec';
+    const URL_EXCEL = 'https://script.google.com/macros/s/AKfycbzG6GSMOKBKBeuxjcoDrlHTMIERt1LogG2stT71btH-XQbI9vwpmURdJ_uOkvrRR3lQ/exec';
     
     const CATALOGO = [
-        { n: '1 Litro', label: '🥛 1 Litro', p: 140, color: 'btn-blanco' },
-        { n: '1/2 Litro', label: '🥛 1/2 Litro', p: 70, color: 'btn-blanco' },
-        { n: 'Vasija 2 Lit', label: '🏺 V 2Lit', p: 280, color: 'btn-gris' },
-        { n: 'Vasija 1/2 Lit', label: '🏺 V 1/2 Lit', p: 70, color: 'btn-gris' },
-        { n: 'Vasija $200', label: '🏺 V $200', p: 200, color: 'btn-gris' },
-        { n: 'Vasija $300', label: '🏺 V $300', p: 300, color: 'btn-gris' },
-        { n: 'Vasija 1 Lit', label: '🏺 V 1 Lit', p: 140, color: 'btn-gris' },
-        { n: 'Pezuña', label: '🍖 $35', p: 35, color: 'btn-amarillo' },
-        { n: 'Hueso Ch', label: '🦴 Ch', p: 25, color: 'btn-amarillo' },
-        { n: 'Hueso Gdo', label: '🦴 Gdo', p: 35, color: 'btn-amarillo' },
-        { n: 'Caldo 1/2', label: '🥣 Caldo 1/2', p: 25, color: 'btn-gris' },
-        { n: 'Caldo 1 Lit', label: '🥣 Caldo 1 Lit', p: 45, color: 'btn-gris' }
+        { nombre: '1 Litro', label: '🥛 1 Litro', precio: 140, color: 'btn-blanco' },
+        { nombre: '1/2 Litro', label: '🥛 1/2 Litro', precio: 70, color: 'btn-blanco' },
+        { nombre: 'Vasija 2 Lit', label: '🏺 V 2Lit', precio: 280, color: 'btn-gris' },
+        { nombre: 'Vasija 1/2 Lit', label: '🏺 V 1/2 Lit', precio: 70, color: 'btn-gris' },
+        { nombre: 'Vasija $200', label: '🏺 V $200', precio: 200, color: 'btn-gris' },
+        { nombre: 'Vasija $300', label: '🏺 V $300', precio: 300, color: 'btn-gris' },
+        { nombre: 'Vasija 1 Lit', label: '🏺 V 1 Lit', precio: 140, color: 'btn-gris' },
+        { nombre: 'Pezuña', label: '🍖 $35', precio: 35, color: 'btn-amarillo' },
+        { nombre: 'Hueso Ch', label: '🦴 Ch', precio: 25, color: 'btn-amarillo' },
+        { nombre: 'Hueso Gdo', label: '🦴 Gdo', precio: 35, color: 'btn-amarillo' },
+        { nombre: 'Caldo 1/2', label: '🥣 Caldo 1/2', precio: 25, color: 'btn-gris' },
+        { nombre: 'Caldo 1 Lit', label: '🥣 Caldo 1 Lit', precio: 45, color: 'btn-gris' }
     ];
 
     let db = JSON.parse(localStorage.getItem('menudo_db')) || [];
@@ -185,7 +185,7 @@
 
     function abrirModalEspecial() { feedback('click'); modalPaso = 1; document.getElementById('modal-especial').style.display = 'flex'; document.getElementById('modal-monto').style.display = 'block'; document.getElementById('modal-concepto').style.display = 'none'; setTimeout(() => document.getElementById('modal-monto').focus(), 100); }
     function modalSiguiente() {
-        if (modalPaso === 1) { modalPaso = 2; document.getElementById('modal-monto').style.display = 'none'; document.getElementById('modal-concepto').style.display = 'block'; setTimeout(() => document.getElementById('modal-concepto').focus(), 100); }
+        if (modalPaso === 1) { if (!document.getElementById('modal-monto').value) return alert("Monto!"); modalPaso = 2; document.getElementById('modal-monto').style.display = 'none'; document.getElementById('modal-concepto').style.display = 'block'; setTimeout(() => document.getElementById('modal-concepto').focus(), 100); }
         else { cart.push({ nombre: document.getElementById('modal-concepto').value.trim() || "Especial", precio: parseFloat(document.getElementById('modal-monto').value) }); actualizarUI(); cerrarModalEspecial(); }
     }
     function cerrarModalEspecial() { document.getElementById('modal-especial').style.display = 'none'; }
@@ -194,7 +194,7 @@
 
     function renderSemanas() {
         const lista = document.getElementById('lista-semanas');
-        lista.innerHTML = db.length ? '' : '<li style="text-align:center;">No hay semanas.</li>';
+        lista.innerHTML = db.length ? '' : '<li style="text-align:center;">Vacío.</li>';
         db.forEach((s, i) => {
             const p = s.pedidos.filter(pd => !pd.sincronizado).length;
             const suma = s.pedidos.reduce((acc, pedido) => acc + pedido.total, 0);
@@ -212,8 +212,8 @@
         CATALOGO.forEach(p => {
             const b = document.createElement('button');
             b.className = 'btn-prod ' + p.color;
-            b.innerHTML = `${p.label}<br>$${p.p}`;
-            b.onclick = () => { feedback('click'); cart.push({ nombre: p.n, precio: p.p }); actualizarUI(); };
+            b.innerHTML = `${p.label}<br>$${p.precio}`;
+            b.onclick = () => { feedback('click'); cart.push({ nombre: p.nombre, precio: p.precio }); actualizarUI(); };
             grid.appendChild(b);
         });
         actualizarUI();
@@ -231,7 +231,7 @@
             total: tot, itemsArray: JSON.parse(JSON.stringify(cart)), sincronizado: false, hora: horaCaptura
         });
         localStorage.setItem('menudo_db', JSON.stringify(db));
-        feedback('cash'); alert("¡Pedido Guardado!"); cart = []; edadSel = "No especificado"; actualizarUI();
+        feedback('cash'); alert("¡Guardado!"); cart = []; edadSel = "No especificado"; actualizarUI();
     }
 
     async function sincronizarTodo() {
@@ -245,7 +245,7 @@
                         await fetch(URL_EXCEL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(d) });
                         p.sincronizado = true;
                         localStorage.setItem('menudo_db', JSON.stringify(db));
-                    } catch (e) { alert("Error de red"); btn.disabled = false; return; }
+                    } catch (e) { alert("Error red"); btn.disabled = false; return; }
                 }
             }
         }
