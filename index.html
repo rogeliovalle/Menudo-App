@@ -5,72 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Menudo App PRO v5.6</title>
     <style>
+        /* Bloqueo de zoom y optimización táctil */
         * { touch-action: manipulation; -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         
         body { 
             font-family: 'Segoe UI', sans-serif; 
             background: #f0f2f5; 
             margin: 0; 
-            padding: 15px; 
+            padding: 12px; 
         }
         
-        .app-container { max-width: 500px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .app-container { max-width: 500px; margin: 0 auto; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .screen { display: none; }
         .active-screen { display: block; }
         
-        h2 { color: #333; text-align: center; margin-bottom: 20px; font-size: 24px; }
+        h2 { color: #333; text-align: center; margin-bottom: 15px; font-size: 22px; }
+        h4 { margin: 5px 0; font-size: 13px; color: #666; }
         
         button { 
-            padding: 12px; margin: 4px 0; border: none; border-radius: 10px; cursor: pointer; 
-            font-size: 16px; width: 100%; font-weight: bold; transition: 0.2s;
+            padding: 12px; margin: 4px 0; border: none; border-radius: 8px; cursor: pointer; 
+            font-size: 15px; width: 100%; font-weight: bold; transition: 0.2s;
         }
 
         .btn-primary { background: #007bff; color: white; }
         .btn-success { background: #28a745; color: white; }
         .btn-danger { background: #dc3545; color: white; }
         .btn-secondary { background: #6c757d; color: white; }
-        .btn-sync { background: #ffc107; color: #333; border: 2px solid #e0a800; margin-bottom: 20px; }
+        .btn-sync { background: #ffc107; color: #333; border: 2px solid #e0a800; margin-bottom: 15px; }
         
-        .grid-productos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0; }
-        
+        /* GRID DE PRODUCTOS */
+        .grid-productos { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 10px 0; }
         .btn-prod { 
-            height: 55px; border: 1px solid #ddd; font-size: 14px;
+            height: 45px; border: 1px solid #ddd; font-size: 13px;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             line-height: 1.1; 
         }
         
+        /* Colores de grupos */
         .btn-blanco { background: #ffffff; color: #333; }
         .btn-gris { background: #e9ecef; color: #333; }
         .btn-amarillo { background: #ffeb3b; color: #333; border-color: #fdd835; }
         
         .btn-prod:active { transform: scale(0.95); opacity: 0.8; }
         
-        .btn-custom { background: #6f42c1 !important; color: white !important; height: 45px; margin-bottom: 5px; }
+        .btn-custom { background: #6f42c1 !important; color: white !important; height: 40px; margin-bottom: 5px; }
 
-        .flex-row { display: flex; gap: 5px; margin: 5px 0; }
+        .flex-row { display: flex; gap: 4px; margin: 5px 0; }
         .btn-edad { 
             background: #fff; border: 1px solid #007bff; color: #007bff; 
             padding: 8px 2px; font-size: 10px; flex: 1; min-width: 0;
         }
         .btn-edad.selected { background: #007bff; color: white; }
         
-        .resumen-total { font-size: 26px; font-weight: bold; text-align: center; color: #28a745; margin: 5px 0; padding: 5px; border-top: 1px solid #eee; }
-        
-        #btn-save { margin-top: 0; margin-bottom: 5px; }
+        /* AREA TOTAL COMPACTA */
+        .resumen-total { font-size: 24px; font-weight: bold; text-align: center; color: #28a745; margin: 5px 0; padding: 5px; border-top: 1px solid #eee; }
+        #btn-save { margin-top: 0; margin-bottom: 5px; font-size: 17px; }
 
-        .item-carrito { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #eee; font-size: 16px; }
+        .item-carrito { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; }
         .lista-datos { list-style: none; padding: 0; margin: 0; }
-        .lista-datos li { background: #f8f9fa; border: 1px solid #ddd; padding: 18px; margin-bottom: 10px; border-radius: 10px; }
+        .lista-datos li { background: #f8f9fa; border: 1px solid #ddd; padding: 15px; margin-bottom: 8px; border-radius: 10px; }
         
-        input, select { width: 100%; padding: 15px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
+        input, select { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; box-sizing: border-box; }
+        .badge-sync { font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: 5px; }
 
-        /* MODAL */
+        /* MODAL VENTA ESPECIAL */
         #modal-especial {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center;
         }
         .modal-content {
             background: white; padding: 20px; border-radius: 15px; width: 90%; max-width: 350px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
     </style>
 </head>
@@ -78,7 +83,7 @@
 
 <div id="modal-especial">
     <div class="modal-content">
-        <h3 id="modal-titulo" style="text-align:center;">Monto $$</h3>
+        <h3 id="modal-titulo" style="text-align:center; margin-top:0;">Monto $$</h3>
         <input type="number" id="modal-monto" inputmode="decimal" placeholder="0.00" style="display: block; text-align: center; font-size: 24px;">
         <input type="text" id="modal-concepto" placeholder="¿Qué es?" style="display: none;">
         <button class="btn-success" id="btn-modal-next" onclick="modalSiguiente()">Siguiente</button>
@@ -95,13 +100,13 @@
         <button id="btn-sync-global" class="btn-sync" onclick="sincronizarTodo()" style="display:none;">
             🔄 Sincronizar Pedidos (<span id="count-sync">0</span>)
         </button>
-        <h4 style="margin-bottom:10px; color:#666;">Semanas Guardadas:</h4>
+        <h4 style="margin-bottom:10px;">Semanas Guardadas:</h4>
         <ul id="lista-semanas" class="lista-datos"></ul>
         <button class="btn-primary" onclick="cambiarPantalla('pantalla-nueva-semana')">+ Nueva Semana de Captura</button>
     </div>
 
     <div id="pantalla-pedido" class="screen">
-        <h3 id="info-cabecera" style="font-size: 12px; color: #666; text-align: center; margin-bottom: 5px;"></h3>
+        <h3 id="info-cabecera" style="font-size: 11px; color: #666; text-align: center; margin-bottom: 5px;"></h3>
         <div class="grid-productos" id="grid-prods"></div>
         <button class="btn-custom" onclick="abrirModalEspecial()">✨ VENTA ESPECIAL ($?)</button>
         <div class="flex-row">
@@ -143,7 +148,7 @@
     <div id="pantalla-resumen" class="screen">
         <h2 id="resumen-titulo"></h2>
         <button class="btn-success" id="btn-re-entrar" style="margin-bottom:15px;">+ Vender más</button>
-        <div id="pedidos-historial" style="max-height: 300px; overflow-y: auto;">
+        <div id="pedidos-historial" style="max-height: 250px; overflow-y: auto;">
             <ul id="lista-pedidos-historial" class="lista-datos"></ul>
         </div>
         <button class="btn-secondary" onclick="cambiarPantalla('pantalla-portada')">Cerrar</button>
@@ -151,7 +156,43 @@
 </div>
 
 <script>
+    const URL_EXCEL = 'https://script.google.com/macros/s/AKfycbwifbm4_rOI6JkyHSbtGrRG-4HGDIHHQCIMvnjt5VYr32BwQKjVvMazGB6BPRLdVmlT/exec';
+    
+    // CATALOGO: 'n' para Excel, 'label' para lo que ves tú
+    const CATALOGO = [
+        { n: '1 Litro', label: '🥛 1 Litro', p: 140, color: 'btn-blanco' },
+        { n: '1/2 Litro', label: '🥛 1/2 Litro', p: 70, color: 'btn-blanco' },
+        { n: 'Vasija 2 Lit', label: '🏺 V 2Lit', p: 280, color: 'btn-gris' },
+        { n: 'Vasija 1/2 Lit', label: '🏺 V 1/2 Lit', p: 70, color: 'btn-gris' },
+        { n: 'Vasija $200', label: '🏺 V $200', p: 200, color: 'btn-gris' },
+        { n: 'Vasija $300', label: '🏺 V $300', p: 300, color: 'btn-gris' },
+        { n: 'Vasija 1 Lit', label: '🏺 V 1 Lit', p: 140, color: 'btn-gris' },
+        { n: 'Pezuña', label: '🍖 $35', p: 35, color: 'btn-amarillo' },
+        { n: 'Hueso Ch', label: '🦴 Ch', p: 25, color: 'btn-amarillo' },
+        { n: 'Hueso Gdo', label: '🦴 Gdo', p: 35, color: 'btn-amarillo' },
+        { n: 'Caldo 1/2', label: '🥣 Caldo 1/2', p: 25, color: 'btn-gris' },
+        { n: 'Caldo 1 Lit', label: '🥣 Caldo 1 Lit', p: 45, color: 'btn-gris' }
+    ];
+
+    let db = JSON.parse(localStorage.getItem('menudo_db')) || [];
+    let semActiva = null;
+    let cart = [];
+    let edadSel = "No especificado";
     let modalPaso = 1;
+
+    window.onload = () => { renderSemanas(); actualizarBotonSync(); document.getElementById('input-fecha').valueAsDate = new Date(); };
+
+    function feedback(tipo) {
+        if (tipo === 'click') {
+            const s = document.getElementById('snd-click');
+            s.currentTime = 0; s.play().catch(()=>{});
+            if (navigator.vibrate) navigator.vibrate(40);
+        } else if (tipo === 'cash') {
+            const s = document.getElementById('snd-cash');
+            s.currentTime = 0; s.play().catch(()=>{});
+            if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+        }
+    }
 
     function abrirModalEspecial() {
         feedback('click');
@@ -168,8 +209,7 @@
 
     function modalSiguiente() {
         if (modalPaso === 1) {
-            const m = document.getElementById('modal-monto').value;
-            if (!m || isNaN(m)) return alert("Precio inválido");
+            if (!document.getElementById('modal-monto').value) return alert("Pon el monto");
             modalPaso = 2;
             document.getElementById('modal-titulo').innerText = '¿Qué es?';
             document.getElementById('modal-monto').style.display = 'none';
@@ -177,52 +217,14 @@
             document.getElementById('btn-modal-next').innerText = 'Capturar';
             setTimeout(() => document.getElementById('modal-concepto').focus(), 100);
         } else {
-            const monto = parseFloat(document.getElementById('modal-monto').value);
-            let concepto = document.getElementById('modal-concepto').value.trim();
-            if (!concepto) concepto = "Especial";
+            let monto = parseFloat(document.getElementById('modal-monto').value);
+            let concepto = document.getElementById('modal-concepto').value.trim() || "Especial";
             cart.push({ n: concepto, p: monto });
             actualizarUI();
             cerrarModalEspecial();
         }
     }
-
     function cerrarModalEspecial() { document.getElementById('modal-especial').style.display = 'none'; }
-
-    function feedback(tipo) {
-        if (tipo === 'click') {
-            const s = document.getElementById('snd-click');
-            s.currentTime = 0; s.play().catch(()=>{});
-            if (navigator.vibrate) navigator.vibrate(40);
-        } else if (tipo === 'cash') {
-            const s = document.getElementById('snd-cash');
-            s.currentTime = 0; s.play().catch(()=>{});
-            if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
-        }
-    }
-
-    const URL_EXCEL = 'https://script.google.com/macros/s/AKfycbz-_Dw2_ZULveE9QNxKkAzJyJ2XZF4Okca9CUsiJmj4MxY2KWwBak9qVGBCWM7apeHk/exec';
-    
-    const CATALOGO = [
-        { n: '1 Litro', label: '🥛 1 Litro', p: 140, color: 'btn-blanco' },
-        { n: '1/2 Litro', label: '🥛 1/2 Litro', p: 70, color: 'btn-blanco' },
-        { n: 'Vasija 2 Lit', label: '🏺 2Lit', p: 280, color: 'btn-gris' },
-        { n: 'Vasija 1/2 Lit', label: '🏺 1/2 Lit', p: 70, color: 'btn-gris' },
-        { n: 'Vasija $200', label: '🏺 $200', p: 200, color: 'btn-gris' },
-        { n: 'Vasija $300', label: '🏺 $300', p: 300, color: 'btn-gris' },
-        { n: 'Vasija 1 Lit', label: '🏺 1 Lit', p: 140, color: 'btn-gris' },
-        { n: 'Pezuña', label: '🍖 $35', p: 35, color: 'btn-amarillo' },
-        { n: 'Hueso Ch', label: '🦴 Ch', p: 25, color: 'btn-amarillo' },
-        { n: 'Hueso Gdo', label: '🦴 Gdo', p: 35, color: 'btn-amarillo' },
-        { n: 'Caldo 1/2', label: '🥣 Caldo 1/2', p: 25, color: 'btn-gris' },
-        { n: 'Caldo 1 Lit', label: '🥣 Caldo 1 Lit', p: 45, color: 'btn-gris' }
-    ];
-
-    let db = JSON.parse(localStorage.getItem('menudo_db')) || [];
-    let semActiva = null;
-    let cart = [];
-    let edadSel = "No especificado";
-
-    window.onload = () => { renderSemanas(); actualizarBotonSync(); document.getElementById('input-fecha').valueAsDate = new Date(); };
 
     function cambiarPantalla(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
@@ -236,13 +238,10 @@
         lista.innerHTML = db.length ? '' : '<li style="text-align:center;">No hay semanas.</li>';
         db.forEach((s, i) => {
             const p = s.pedidos.filter(pd => !pd.sincronizado).length;
-            // CÁLCULO DE SUMA TOTAL $$$
-            const sumaDinero = s.pedidos.reduce((acc, pedido) => acc + pedido.total, 0);
-            
+            const sumaSemana = s.pedidos.reduce((acc, pedido) => acc + pedido.total, 0);
             const li = document.createElement('li');
-            li.innerHTML = `<b>Semana: ${s.fecha}</b><br>
-                            <small>Peds: ${s.pedidos.length} | <b>Total: $${sumaDinero}</b></small>
-                            ${p > 0 ? `<br><span class="badge-sync bg-red">Pend: ${p}</span>` : `<br><span class="badge-sync bg-green">Sincronizado</span>`}`;
+            li.innerHTML = `<b>${s.fecha}</b><br><small>Ventas: ${s.pedidos.length} | <b>Dinero: $${sumaSemana}</b></small>
+                            ${p > 0 ? `<br><span class="badge-sync bg-red">Pend: ${p}</span>` : `<br><span class="badge-sync bg-green">OK</span>`}`;
             li.onclick = () => verResumenSemana(i);
             lista.appendChild(li);
         });
@@ -263,27 +262,20 @@
     }
 
     function guardarPedidoLocal() {
-        if(!cart.length) return alert("Carrito vacío");
+        if(!cart.length) return alert("Vacío");
         const tot = cart.reduce((a, b) => a + b.p, 0);
         const idx = db.findIndex(s => s.id === semActiva.id);
-        
-        // GRABAR HORA REAL DE CAPTURA
         const ahora = new Date();
         const horaCaptura = ahora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
         db[idx].pedidos.push({
-            idPedido: Date.now(), 
-            idSemana: semActiva.fecha, 
-            rangoEdad: edadSel,
+            idPedido: Date.now(), idSemana: semActiva.fecha, rangoEdad: edadSel,
             itemsArray: cart.map(i => ({ nombre: i.n, precio: i.p })),
-            total: tot, 
-            itemsText: cart.map(i => i.n).join(', '), 
-            sincronizado: false,
-            hora: horaCaptura // Guardamos la hora exacta aquí
+            total: tot, itemsText: cart.map(i => i.n).join(', '), sincronizado: false,
+            hora: horaCaptura
         });
         localStorage.setItem('menudo_db', JSON.stringify(db));
-        feedback('cash');
-        alert("¡Guardado!");
+        feedback('cash'); alert("¡Pedido Guardado!");
         cart = []; edadSel = "No especificado";
         document.querySelectorAll('.btn-edad').forEach(b => b.classList.remove('selected'));
         actualizarUI();
@@ -296,24 +288,17 @@
             for (let p of s.pedidos) {
                 if (!p.sincronizado) {
                     try {
-                        const d = { 
-                            idSemana: p.idSemana, 
-                            rangoEdad: p.rangoEdad, 
-                            itemsArray: p.itemsArray, 
-                            total: p.total,
-                            hora: p.hora // MANDAMOS LA HORA REAL AL EXCEL
-                        };
+                        const d = { idSemana: p.idSemana, rangoEdad: p.rangoEdad, itemsArray: p.itemsArray, total: p.total, hora: p.hora };
                         await fetch(URL_EXCEL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(d) });
                         p.sincronizado = true;
                         localStorage.setItem('menudo_db', JSON.stringify(db));
-                    } catch (e) { alert("Error red"); btn.disabled = false; return; }
+                    } catch (e) { alert("Error de red"); btn.disabled = false; return; }
                 }
             }
         }
         alert("✅ Sincronizado"); renderSemanas(); actualizarBotonSync(); btn.disabled = false;
     }
 
-    // --- FUNCIONES DE APOYO ---
     function setEdad(v, b) { feedback('click'); edadSel = v; document.querySelectorAll('.btn-edad').forEach(btn => btn.classList.remove('selected')); b.classList.add('selected'); }
     function actualizarUI() { document.getElementById('txt-total').innerText = cart.reduce((a, b) => a + b.p, 0); document.getElementById('count-cart').innerText = cart.length; }
     function renderCarrito() { const cont = document.getElementById('lista-carrito'); cont.innerHTML = cart.length ? '' : '<p>Vacío</p>'; cart.forEach((item, i) => { const div = document.createElement('div'); div.className = 'item-carrito'; div.innerHTML = `<span>${item.n} ($${item.p})</span><button class="btn-danger" style="width:auto; padding:8px 15px;" onclick="quitar(${i})">X</button>`; cont.appendChild(div); }); }
