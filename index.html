@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Menudo App PRO v5.9</title>
+    <title>Menudo App PRO v6.0</title>
     <style>
         /* Bloqueo de zoom y optimización táctil */
         * { touch-action: manipulation; -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
@@ -153,7 +153,7 @@
 </div>
 
 <script>
-    const URL_EXCEL = 'https://script.google.com/macros/s/AKfycbzI9Z_uywyjCI75pWyNgbAEexmT_qAe7yTecOP7lFE9eZBEeLBDpOndpsB_vl86w6_R/exec';
+    const URL_EXCEL = 'https://script.google.com/macros/s/AKfycbx641sqmxUyOVgJbRjRzbqxHG3DZazozKGZWzeNdUFfw2RY9zc9GP51XfGgruejmyxB/exec';
     
     const CATALOGO = [
         { n: '1 Litro', label: '🥛 1 Litro', p: 140, color: 'btn-blanco' },
@@ -185,7 +185,7 @@
 
     function abrirModalEspecial() { feedback('click'); modalPaso = 1; document.getElementById('modal-especial').style.display = 'flex'; document.getElementById('modal-monto').style.display = 'block'; document.getElementById('modal-concepto').style.display = 'none'; setTimeout(() => document.getElementById('modal-monto').focus(), 100); }
     function modalSiguiente() {
-        if (modalPaso === 1) { if (!document.getElementById('modal-monto').value) return alert("Pon el monto"); modalPaso = 2; document.getElementById('modal-monto').style.display = 'none'; document.getElementById('modal-concepto').style.display = 'block'; setTimeout(() => document.getElementById('modal-concepto').focus(), 100); }
+        if (modalPaso === 1) { modalPaso = 2; document.getElementById('modal-monto').style.display = 'none'; document.getElementById('modal-concepto').style.display = 'block'; setTimeout(() => document.getElementById('modal-concepto').focus(), 100); }
         else { cart.push({ nombre: document.getElementById('modal-concepto').value.trim() || "Especial", precio: parseFloat(document.getElementById('modal-monto').value) }); actualizarUI(); cerrarModalEspecial(); }
     }
     function cerrarModalEspecial() { document.getElementById('modal-especial').style.display = 'none'; }
@@ -228,7 +228,7 @@
 
         db[idx].pedidos.push({
             idPedido: Date.now(), idSemana: semActiva.fecha, rangoEdad: edadSel, temp: semActiva.temp,
-            total: tot, itemsArray: cart, sincronizado: false, hora: horaCaptura
+            total: tot, itemsArray: JSON.parse(JSON.stringify(cart)), sincronizado: false, hora: horaCaptura
         });
         localStorage.setItem('menudo_db', JSON.stringify(db));
         feedback('cash'); alert("¡Pedido Guardado!"); cart = []; edadSel = "No especificado"; actualizarUI();
