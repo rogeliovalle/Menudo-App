@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Menudo App PRO v5.6</title>
+    <title>Menudo App PRO v5.9</title>
     <style>
         /* Bloqueo de zoom y optimización táctil */
         * { touch-action: manipulation; -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
@@ -20,7 +20,6 @@
         .active-screen { display: block; }
         
         h2 { color: #333; text-align: center; margin-bottom: 15px; font-size: 22px; }
-        h4 { margin: 5px 0; font-size: 13px; color: #666; }
         
         button { 
             padding: 12px; margin: 4px 0; border: none; border-radius: 8px; cursor: pointer; 
@@ -33,10 +32,10 @@
         .btn-secondary { background: #6c757d; color: white; }
         .btn-sync { background: #ffc107; color: #333; border: 2px solid #e0a800; margin-bottom: 15px; }
         
-        /* GRID DE PRODUCTOS */
+        /* GRID DE PRODUCTOS 2 COLUMNAS */
         .grid-productos { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 10px 0; }
         .btn-prod { 
-            height: 45px; border: 1px solid #ddd; font-size: 13px;
+            height: 55px; border: 1px solid #ddd; font-size: 13px;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             line-height: 1.1; 
         }
@@ -48,7 +47,7 @@
         
         .btn-prod:active { transform: scale(0.95); opacity: 0.8; }
         
-        .btn-custom { background: #6f42c1 !important; color: white !important; height: 40px; margin-bottom: 5px; }
+        .btn-custom { background: #6f42c1 !important; color: white !important; height: 45px; margin-bottom: 5px; }
 
         .flex-row { display: flex; gap: 4px; margin: 5px 0; }
         .btn-edad { 
@@ -57,8 +56,8 @@
         }
         .btn-edad.selected { background: #007bff; color: white; }
         
-        /* AREA TOTAL COMPACTA */
         .resumen-total { font-size: 24px; font-weight: bold; text-align: center; color: #28a745; margin: 5px 0; padding: 5px; border-top: 1px solid #eee; }
+        
         #btn-save { margin-top: 0; margin-bottom: 5px; font-size: 17px; }
 
         .item-carrito { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; }
@@ -66,7 +65,6 @@
         .lista-datos li { background: #f8f9fa; border: 1px solid #ddd; padding: 15px; margin-bottom: 8px; border-radius: 10px; }
         
         input, select { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; box-sizing: border-box; }
-        .badge-sync { font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: 5px; }
 
         /* MODAL VENTA ESPECIAL */
         #modal-especial {
@@ -75,7 +73,6 @@
         }
         .modal-content {
             background: white; padding: 20px; border-radius: 15px; width: 90%; max-width: 350px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
     </style>
 </head>
@@ -134,7 +131,7 @@
     <div id="pantalla-nueva-semana" class="screen">
         <h2>Configurar Semana</h2>
         <input type="date" id="input-fecha">
-        <input type="number" id="input-temp" placeholder="Temp °C">
+        <input type="number" id="input-temp" placeholder="Semana anu (ej: 14)">
         <select id="input-clima">
             <option value="Soleado">☀️ Soleado</option>
             <option value="Nublado">☁️ Nublado</option>
@@ -156,9 +153,8 @@
 </div>
 
 <script>
-    const URL_EXCEL = 'https://script.google.com/macros/s/AKfycbwifbm4_rOI6JkyHSbtGrRG-4HGDIHHQCIMvnjt5VYr32BwQKjVvMazGB6BPRLdVmlT/exec';
+    const URL_EXCEL = 'https://script.google.com/macros/s/AKfycbzI9Z_uywyjCI75pWyNgbAEexmT_qAe7yTecOP7lFE9eZBEeLBDpOndpsB_vl86w6_R/exec';
     
-    // CATALOGO: 'n' para Excel, 'label' para lo que ves tú
     const CATALOGO = [
         { n: '1 Litro', label: '🥛 1 Litro', p: 140, color: 'btn-blanco' },
         { n: '1/2 Litro', label: '🥛 1/2 Litro', p: 70, color: 'btn-blanco' },
@@ -183,79 +179,41 @@
     window.onload = () => { renderSemanas(); actualizarBotonSync(); document.getElementById('input-fecha').valueAsDate = new Date(); };
 
     function feedback(tipo) {
-        if (tipo === 'click') {
-            const s = document.getElementById('snd-click');
-            s.currentTime = 0; s.play().catch(()=>{});
-            if (navigator.vibrate) navigator.vibrate(40);
-        } else if (tipo === 'cash') {
-            const s = document.getElementById('snd-cash');
-            s.currentTime = 0; s.play().catch(()=>{});
-            if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
-        }
+        if (tipo === 'click') { const s = document.getElementById('snd-click'); s.currentTime = 0; s.play().catch(()=>{}); if (navigator.vibrate) navigator.vibrate(40); }
+        else if (tipo === 'cash') { const s = document.getElementById('snd-cash'); s.currentTime = 0; s.play().catch(()=>{}); if (navigator.vibrate) navigator.vibrate([100, 50, 100]); }
     }
 
-    function abrirModalEspecial() {
-        feedback('click');
-        modalPaso = 1;
-        document.getElementById('modal-especial').style.display = 'flex';
-        document.getElementById('modal-titulo').innerText = 'Monto $$';
-        document.getElementById('modal-monto').style.display = 'block';
-        document.getElementById('modal-monto').value = "";
-        document.getElementById('modal-concepto').style.display = 'none';
-        document.getElementById('modal-concepto').value = "";
-        document.getElementById('btn-modal-next').innerText = 'Siguiente';
-        setTimeout(() => document.getElementById('modal-monto').focus(), 100);
-    }
-
+    function abrirModalEspecial() { feedback('click'); modalPaso = 1; document.getElementById('modal-especial').style.display = 'flex'; document.getElementById('modal-monto').style.display = 'block'; document.getElementById('modal-concepto').style.display = 'none'; setTimeout(() => document.getElementById('modal-monto').focus(), 100); }
     function modalSiguiente() {
-        if (modalPaso === 1) {
-            if (!document.getElementById('modal-monto').value) return alert("Pon el monto");
-            modalPaso = 2;
-            document.getElementById('modal-titulo').innerText = '¿Qué es?';
-            document.getElementById('modal-monto').style.display = 'none';
-            document.getElementById('modal-concepto').style.display = 'block';
-            document.getElementById('btn-modal-next').innerText = 'Capturar';
-            setTimeout(() => document.getElementById('modal-concepto').focus(), 100);
-        } else {
-            let monto = parseFloat(document.getElementById('modal-monto').value);
-            let concepto = document.getElementById('modal-concepto').value.trim() || "Especial";
-            cart.push({ n: concepto, p: monto });
-            actualizarUI();
-            cerrarModalEspecial();
-        }
+        if (modalPaso === 1) { if (!document.getElementById('modal-monto').value) return alert("Pon el monto"); modalPaso = 2; document.getElementById('modal-monto').style.display = 'none'; document.getElementById('modal-concepto').style.display = 'block'; setTimeout(() => document.getElementById('modal-concepto').focus(), 100); }
+        else { cart.push({ nombre: document.getElementById('modal-concepto').value.trim() || "Especial", precio: parseFloat(document.getElementById('modal-monto').value) }); actualizarUI(); cerrarModalEspecial(); }
     }
     function cerrarModalEspecial() { document.getElementById('modal-especial').style.display = 'none'; }
 
-    function cambiarPantalla(id) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
-        document.getElementById(id).classList.add('active-screen');
-        if(id === 'pantalla-portada') { renderSemanas(); actualizarBotonSync(); }
-        if(id === 'pantalla-carrito') renderCarrito();
-    }
+    function cambiarPantalla(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen')); document.getElementById(id).classList.add('active-screen'); if(id === 'pantalla-portada') renderSemanas(); if(id === 'pantalla-carrito') renderCarrito(); }
 
     function renderSemanas() {
         const lista = document.getElementById('lista-semanas');
         lista.innerHTML = db.length ? '' : '<li style="text-align:center;">No hay semanas.</li>';
         db.forEach((s, i) => {
             const p = s.pedidos.filter(pd => !pd.sincronizado).length;
-            const sumaSemana = s.pedidos.reduce((acc, pedido) => acc + pedido.total, 0);
+            const suma = s.pedidos.reduce((acc, pedido) => acc + pedido.total, 0);
             const li = document.createElement('li');
-            li.innerHTML = `<b>${s.fecha}</b><br><small>Ventas: ${s.pedidos.length} | <b>Dinero: $${sumaSemana}</b></small>
-                            ${p > 0 ? `<br><span class="badge-sync bg-red">Pend: ${p}</span>` : `<br><span class="badge-sync bg-green">OK</span>`}`;
+            li.innerHTML = `<b>${s.fecha}</b><br><small>Peds: ${s.pedidos.length} | <b>Total: $${suma}</b></small>${p > 0 ? `<br><span class="badge-sync bg-red">Pend: ${p}</span>` : `<br><span class="badge-sync bg-green">OK</span>`}`;
             li.onclick = () => verResumenSemana(i);
             lista.appendChild(li);
         });
     }
 
     function prepararPedido() {
-        document.getElementById('info-cabecera').innerText = `Venta: ${semActiva.fecha}`;
+        document.getElementById('info-cabecera').innerText = `Venta: ${semActiva.fecha} (Sem: ${semActiva.temp})`;
         const grid = document.getElementById('grid-prods');
         grid.innerHTML = '';
         CATALOGO.forEach(p => {
             const b = document.createElement('button');
             b.className = 'btn-prod ' + p.color;
             b.innerHTML = `${p.label}<br>$${p.p}`;
-            b.onclick = () => { feedback('click'); cart.push({ n: p.n, p: p.p }); actualizarUI(); };
+            b.onclick = () => { feedback('click'); cart.push({ nombre: p.n, precio: p.p }); actualizarUI(); };
             grid.appendChild(b);
         });
         actualizarUI();
@@ -263,22 +221,17 @@
 
     function guardarPedidoLocal() {
         if(!cart.length) return alert("Vacío");
-        const tot = cart.reduce((a, b) => a + b.p, 0);
+        const tot = cart.reduce((a, b) => a + b.precio, 0);
         const idx = db.findIndex(s => s.id === semActiva.id);
         const ahora = new Date();
-        const horaCaptura = ahora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const horaCaptura = ahora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
 
         db[idx].pedidos.push({
-            idPedido: Date.now(), idSemana: semActiva.fecha, rangoEdad: edadSel,
-            itemsArray: cart.map(i => ({ nombre: i.n, precio: i.p })),
-            total: tot, itemsText: cart.map(i => i.n).join(', '), sincronizado: false,
-            hora: horaCaptura
+            idPedido: Date.now(), idSemana: semActiva.fecha, rangoEdad: edadSel, temp: semActiva.temp,
+            total: tot, itemsArray: cart, sincronizado: false, hora: horaCaptura
         });
         localStorage.setItem('menudo_db', JSON.stringify(db));
-        feedback('cash'); alert("¡Pedido Guardado!");
-        cart = []; edadSel = "No especificado";
-        document.querySelectorAll('.btn-edad').forEach(b => b.classList.remove('selected'));
-        actualizarUI();
+        feedback('cash'); alert("¡Pedido Guardado!"); cart = []; edadSel = "No especificado"; actualizarUI();
     }
 
     async function sincronizarTodo() {
@@ -288,7 +241,7 @@
             for (let p of s.pedidos) {
                 if (!p.sincronizado) {
                     try {
-                        const d = { idSemana: p.idSemana, rangoEdad: p.rangoEdad, itemsArray: p.itemsArray, total: p.total, hora: p.hora };
+                        const d = { idSemana: p.idSemana, rangoEdad: p.rangoEdad, total: p.total, itemsArray: p.itemsArray, hora: p.hora, temp: p.temp };
                         await fetch(URL_EXCEL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(d) });
                         p.sincronizado = true;
                         localStorage.setItem('menudo_db', JSON.stringify(db));
@@ -300,13 +253,13 @@
     }
 
     function setEdad(v, b) { feedback('click'); edadSel = v; document.querySelectorAll('.btn-edad').forEach(btn => btn.classList.remove('selected')); b.classList.add('selected'); }
-    function actualizarUI() { document.getElementById('txt-total').innerText = cart.reduce((a, b) => a + b.p, 0); document.getElementById('count-cart').innerText = cart.length; }
-    function renderCarrito() { const cont = document.getElementById('lista-carrito'); cont.innerHTML = cart.length ? '' : '<p>Vacío</p>'; cart.forEach((item, i) => { const div = document.createElement('div'); div.className = 'item-carrito'; div.innerHTML = `<span>${item.n} ($${item.p})</span><button class="btn-danger" style="width:auto; padding:8px 15px;" onclick="quitar(${i})">X</button>`; cont.appendChild(div); }); }
+    function actualizarUI() { document.getElementById('txt-total').innerText = cart.reduce((a, b) => a + b.precio, 0); document.getElementById('count-cart').innerText = cart.length; }
+    function renderCarrito() { const cont = document.getElementById('lista-carrito'); cont.innerHTML = cart.length ? '' : '<p>Vacío</p>'; cart.forEach((item, i) => { const div = document.createElement('div'); div.className = 'item-carrito'; div.innerHTML = `<span>${item.nombre} ($${item.precio})</span><button class="btn-danger" style="width:auto; padding:8px 15px;" onclick="quitar(${i})">X</button>`; cont.appendChild(div); }); }
     function quitar(i) { feedback('click'); cart.splice(i, 1); renderCarrito(); actualizarUI(); }
     function vaciarCarrito() { feedback('click'); cart = []; actualizarUI(); cambiarPantalla('pantalla-pedido'); }
     function cerrarSesionPedido() { feedback('click'); semActiva = null; cart = []; cambiarPantalla('pantalla-portada'); }
-    function guardarNuevaSemana() { feedback('click'); let f = document.getElementById('input-fecha').value; if(!f) return alert("Fecha!"); let n = { id: Date.now(), fecha: f, pedidos: [] }; db.push(n); semActiva = n; localStorage.setItem('menudo_db', JSON.stringify(db)); prepararPedido(); cambiarPantalla('pantalla-pedido'); }
-    function verResumenSemana(i) { const s = db[i]; document.getElementById('resumen-titulo').innerText = "Sem: " + s.fecha; document.getElementById('btn-re-entrar').onclick = () => { feedback('click'); semActiva = s; prepararPedido(); cambiarPantalla('pantalla-pedido'); }; const h = document.getElementById('lista-pedidos-historial'); h.innerHTML = s.pedidos.length ? '' : '<li>Vacío.</li>'; s.pedidos.slice().reverse().forEach(p => { const li = document.createElement('li'); li.innerHTML = `${p.sincronizado ? '✅' : '⏳'} $${p.total} - ${p.itemsText}`; h.appendChild(li); }); cambiarPantalla('pantalla-resumen'); }
+    function guardarNuevaSemana() { feedback('click'); let f = document.getElementById('input-fecha').value; let t = document.getElementById('input-temp').value || "0"; if(!f) return alert("Fecha!"); let n = { id: Date.now(), fecha: f, temp: t, pedidos: [] }; db.push(n); semActiva = n; localStorage.setItem('menudo_db', JSON.stringify(db)); prepararPedido(); cambiarPantalla('pantalla-pedido'); }
+    function verResumenSemana(i) { const s = db[i]; document.getElementById('resumen-titulo').innerText = "Sem: " + s.fecha; document.getElementById('btn-re-entrar').onclick = () => { feedback('click'); semActiva = s; prepararPedido(); cambiarPantalla('pantalla-pedido'); }; const h = document.getElementById('lista-pedidos-historial'); h.innerHTML = s.pedidos.length ? '' : '<li>Vacío.</li>'; s.pedidos.slice().reverse().forEach(p => { const li = document.createElement('li'); li.innerHTML = `${p.sincronizado ? '✅' : '⏳'} $${p.total} - ${p.itemsArray.map(i => i.nombre).join(', ')}`; h.appendChild(li); }); cambiarPantalla('pantalla-resumen'); }
     function actualizarBotonSync() { let tp = 0; db.forEach(s => tp += s.pedidos.filter(p => !p.sincronizado).length); const btn = document.getElementById('btn-sync-global'); if(tp > 0) { btn.style.display = 'block'; document.getElementById('count-sync').innerText = tp; } else { btn.style.display = 'none'; } }
 </script>
 </body>
