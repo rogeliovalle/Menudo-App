@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Menudo App PRO v5.5</title>
+    <title>Menudo App PRO v5.6</title>
     <style>
         * { touch-action: manipulation; -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         
@@ -64,26 +64,23 @@
         
         input, select { width: 100%; padding: 15px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
 
-        /* ESTILOS DEL MODAL DE VENTA ESPECIAL */
+        /* MODAL */
         #modal-especial {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center;
         }
         .modal-content {
             background: white; padding: 20px; border-radius: 15px; width: 90%; max-width: 350px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
-        .modal-content h3 { margin-top: 0; text-align: center; color: #333; }
     </style>
 </head>
 <body>
 
 <div id="modal-especial">
     <div class="modal-content">
-        <h3 id="modal-titulo">Monto $$</h3>
+        <h3 id="modal-titulo" style="text-align:center;">Monto $$</h3>
         <input type="number" id="modal-monto" inputmode="decimal" placeholder="0.00" style="display: block; text-align: center; font-size: 24px;">
         <input type="text" id="modal-concepto" placeholder="¿Qué es?" style="display: none;">
-        
         <button class="btn-success" id="btn-modal-next" onclick="modalSiguiente()">Siguiente</button>
         <button class="btn-secondary" onclick="cerrarModalEspecial()">Cancelar</button>
     </div>
@@ -98,6 +95,7 @@
         <button id="btn-sync-global" class="btn-sync" onclick="sincronizarTodo()" style="display:none;">
             🔄 Sincronizar Pedidos (<span id="count-sync">0</span>)
         </button>
+        <h4 style="margin-bottom:10px; color:#666;">Semanas Guardadas:</h4>
         <ul id="lista-semanas" class="lista-datos"></ul>
         <button class="btn-primary" onclick="cambiarPantalla('pantalla-nueva-semana')">+ Nueva Semana de Captura</button>
     </div>
@@ -105,9 +103,7 @@
     <div id="pantalla-pedido" class="screen">
         <h3 id="info-cabecera" style="font-size: 12px; color: #666; text-align: center; margin-bottom: 5px;"></h3>
         <div class="grid-productos" id="grid-prods"></div>
-        
         <button class="btn-custom" onclick="abrirModalEspecial()">✨ VENTA ESPECIAL ($?)</button>
-
         <div class="flex-row">
             <button class="btn-edad" onclick="setEdad('10-20', this)">10-20</button>
             <button class="btn-edad" onclick="setEdad('20-30', this)">20-30</button>
@@ -115,10 +111,8 @@
             <button class="btn-edad" onclick="setEdad('40-50', this)">40-50</button>
             <button class="btn-edad" onclick="setEdad('50-60+', this)">50-60+</button>
         </div>
-
         <div class="resumen-total">Total: $<span id="txt-total">0</span></div>
         <button class="btn-success" id="btn-save" onclick="guardarPedidoLocal()">💾 GUARDAR PEDIDO</button>
-        
         <div style="display:flex; gap:5px;">
             <button class="btn-primary" onclick="cambiarPantalla('pantalla-carrito')">🛒 Carrito (<span id="count-cart">0</span>)</button>
             <button class="btn-secondary" onclick="cerrarSesionPedido()">Inicio</button>
@@ -157,7 +151,6 @@
 </div>
 
 <script>
-    // --- LÓGICA DEL MODAL ESPECIAL ---
     let modalPaso = 1;
 
     function abrirModalEspecial() {
@@ -170,40 +163,31 @@
         document.getElementById('modal-concepto').style.display = 'none';
         document.getElementById('modal-concepto').value = "";
         document.getElementById('btn-modal-next').innerText = 'Siguiente';
-        
-        // Enfocar automáticamente para abrir el teclado numérico
         setTimeout(() => document.getElementById('modal-monto').focus(), 100);
     }
 
     function modalSiguiente() {
         if (modalPaso === 1) {
             const m = document.getElementById('modal-monto').value;
-            if (!m || isNaN(m)) return alert("Pon un precio válido");
-            
+            if (!m || isNaN(m)) return alert("Precio inválido");
             modalPaso = 2;
             document.getElementById('modal-titulo').innerText = '¿Qué es?';
             document.getElementById('modal-monto').style.display = 'none';
             document.getElementById('modal-concepto').style.display = 'block';
             document.getElementById('btn-modal-next').innerText = 'Capturar';
-            
-            // Enfocar para abrir teclado de texto
             setTimeout(() => document.getElementById('modal-concepto').focus(), 100);
         } else {
             const monto = parseFloat(document.getElementById('modal-monto').value);
             let concepto = document.getElementById('modal-concepto').value.trim();
-            if (!concepto) concepto = "Especial"; // Default si no ponen nada
-            
+            if (!concepto) concepto = "Especial";
             cart.push({ n: concepto, p: monto });
             actualizarUI();
             cerrarModalEspecial();
         }
     }
 
-    function cerrarModalEspecial() {
-        document.getElementById('modal-especial').style.display = 'none';
-    }
+    function cerrarModalEspecial() { document.getElementById('modal-especial').style.display = 'none'; }
 
-    // --- LÓGICA GENERAL ---
     function feedback(tipo) {
         if (tipo === 'click') {
             const s = document.getElementById('snd-click');
@@ -249,12 +233,16 @@
 
     function renderSemanas() {
         const lista = document.getElementById('lista-semanas');
-        lista.innerHTML = db.length ? '' : '<li style="text-align:center;">No hay semanas guardadas.</li>';
+        lista.innerHTML = db.length ? '' : '<li style="text-align:center;">No hay semanas.</li>';
         db.forEach((s, i) => {
             const p = s.pedidos.filter(pd => !pd.sincronizado).length;
+            // CÁLCULO DE SUMA TOTAL $$$
+            const sumaDinero = s.pedidos.reduce((acc, pedido) => acc + pedido.total, 0);
+            
             const li = document.createElement('li');
-            li.innerHTML = `<b>Semana: ${s.fecha}</b><br><small>Pedidos: ${s.pedidos.length}</small>
-                            ${p > 0 ? `<span class="badge-sync bg-red">Pend: ${p}</span>` : `<span class="badge-sync bg-green">OK</span>`}`;
+            li.innerHTML = `<b>Semana: ${s.fecha}</b><br>
+                            <small>Peds: ${s.pedidos.length} | <b>Total: $${sumaDinero}</b></small>
+                            ${p > 0 ? `<br><span class="badge-sync bg-red">Pend: ${p}</span>` : `<br><span class="badge-sync bg-green">Sincronizado</span>`}`;
             li.onclick = () => verResumenSemana(i);
             lista.appendChild(li);
         });
@@ -275,13 +263,23 @@
     }
 
     function guardarPedidoLocal() {
-        if(!cart.length) return alert("El carrito está vacío");
+        if(!cart.length) return alert("Carrito vacío");
         const tot = cart.reduce((a, b) => a + b.p, 0);
         const idx = db.findIndex(s => s.id === semActiva.id);
+        
+        // GRABAR HORA REAL DE CAPTURA
+        const ahora = new Date();
+        const horaCaptura = ahora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
         db[idx].pedidos.push({
-            idPedido: Date.now(), idSemana: semActiva.fecha, rangoEdad: edadSel,
+            idPedido: Date.now(), 
+            idSemana: semActiva.fecha, 
+            rangoEdad: edadSel,
             itemsArray: cart.map(i => ({ nombre: i.n, precio: i.p })),
-            total: tot, itemsText: cart.map(i => i.n).join(', '), sincronizado: false
+            total: tot, 
+            itemsText: cart.map(i => i.n).join(', '), 
+            sincronizado: false,
+            hora: horaCaptura // Guardamos la hora exacta aquí
         });
         localStorage.setItem('menudo_db', JSON.stringify(db));
         feedback('cash');
@@ -298,7 +296,13 @@
             for (let p of s.pedidos) {
                 if (!p.sincronizado) {
                     try {
-                        const d = { idSemana: p.idSemana, rangoEdad: p.rangoEdad, itemsArray: p.itemsArray, total: p.total };
+                        const d = { 
+                            idSemana: p.idSemana, 
+                            rangoEdad: p.rangoEdad, 
+                            itemsArray: p.itemsArray, 
+                            total: p.total,
+                            hora: p.hora // MANDAMOS LA HORA REAL AL EXCEL
+                        };
                         await fetch(URL_EXCEL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(d) });
                         p.sincronizado = true;
                         localStorage.setItem('menudo_db', JSON.stringify(db));
@@ -309,6 +313,7 @@
         alert("✅ Sincronizado"); renderSemanas(); actualizarBotonSync(); btn.disabled = false;
     }
 
+    // --- FUNCIONES DE APOYO ---
     function setEdad(v, b) { feedback('click'); edadSel = v; document.querySelectorAll('.btn-edad').forEach(btn => btn.classList.remove('selected')); b.classList.add('selected'); }
     function actualizarUI() { document.getElementById('txt-total').innerText = cart.reduce((a, b) => a + b.p, 0); document.getElementById('count-cart').innerText = cart.length; }
     function renderCarrito() { const cont = document.getElementById('lista-carrito'); cont.innerHTML = cart.length ? '' : '<p>Vacío</p>'; cart.forEach((item, i) => { const div = document.createElement('div'); div.className = 'item-carrito'; div.innerHTML = `<span>${item.n} ($${item.p})</span><button class="btn-danger" style="width:auto; padding:8px 15px;" onclick="quitar(${i})">X</button>`; cont.appendChild(div); }); }
