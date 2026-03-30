@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Menudo App PRO v6.2</title>
+    <title>Menudo App PRO v6.4</title>
     <style>
         /* Bloqueo de zoom y optimización táctil */
         * { touch-action: manipulation; -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
@@ -32,7 +32,6 @@
         .btn-secondary { background: #6c757d; color: white; }
         .btn-sync { background: #ffc107; color: #333; border: 2px solid #e0a800; margin-bottom: 15px; }
         
-        /* GRID DE PRODUCTOS 2 COLUMNAS */
         .grid-productos { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 10px 0; }
         .btn-prod { 
             height: 55px; border: 1px solid #ddd; font-size: 13px;
@@ -40,7 +39,6 @@
             line-height: 1.1; 
         }
         
-        /* Colores de grupos */
         .btn-blanco { background: #ffffff; color: #333; }
         .btn-gris { background: #e9ecef; color: #333; }
         .btn-amarillo { background: #ffeb3b; color: #333; border-color: #fdd835; }
@@ -66,7 +64,6 @@
         
         input, select { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; box-sizing: border-box; }
 
-        /* MODAL VENTA ESPECIAL */
         #modal-especial {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center;
@@ -153,7 +150,7 @@
 </div>
 
 <script>
-    const URL_EXCEL = 'https://script.google.com/macros/s/AKfycbzG6GSMOKBKBeuxjcoDrlHTMIERt1LogG2stT71btH-XQbI9vwpmURdJ_uOkvrRR3lQ/exec';
+    const URL_EXCEL = 'https://script.google.com/macros/s/AKfycby2ZCsunSkfY6tpauggMqjuveZM0ot7ZxwwZUedi8YIHOyFr0y8clAxidVHW46XrKjj/exec';
     
     const CATALOGO = [
         { nombre: '1 Litro', label: '🥛 1 Litro', precio: 140, color: 'btn-blanco' },
@@ -231,7 +228,7 @@
             total: tot, itemsArray: JSON.parse(JSON.stringify(cart)), sincronizado: false, hora: horaCaptura
         });
         localStorage.setItem('menudo_db', JSON.stringify(db));
-        feedback('cash'); alert("¡Guardado!"); cart = []; edadSel = "No especificado"; actualizarUI();
+        feedback('cash'); alert("¡Pedido Guardado!"); cart = []; edadSel = "No especificado"; actualizarUI();
     }
 
     async function sincronizarTodo() {
@@ -245,7 +242,7 @@
                         await fetch(URL_EXCEL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(d) });
                         p.sincronizado = true;
                         localStorage.setItem('menudo_db', JSON.stringify(db));
-                    } catch (e) { alert("Error red"); btn.disabled = false; return; }
+                    } catch (e) { alert("Error de red"); btn.disabled = false; return; }
                 }
             }
         }
