@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Menudo App PRO v6.4</title>
+    <title>Menudo App PRO v6.5 - Estilo Premium</title>
     <style>
         /* Bloqueo de zoom y optimización táctil */
         * { touch-action: manipulation; -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
@@ -39,9 +39,15 @@
             line-height: 1.1; 
         }
         
-        .btn-blanco { background: #ffffff; color: #333; }
-        .btn-gris { background: #e9ecef; color: #333; }
-        .btn-amarillo { background: #ffeb3b; color: #333; border-color: #fdd835; }
+        /* --- NUEVA SELECCIÓN DE COLORES --- */
+        /* Litros (Producto Estrella) - Rojo Terracota */
+        .btn-rojo-menudo { background: #D32F2F; color: white; border-color: #B71C1C; }
+        
+        /* Huesos y Pezuña - Beige/Arena */
+        .btn-beige-hueso { background: #F5E6BE; color: #5D4037; border-color: #E6D5A7; }
+        
+        /* Vasijas y otros - Gris Perla */
+        .btn-gris-perla { background: #F8F9FA; color: #495057; border-color: #dee2e6; }
         
         .btn-prod:active { transform: scale(0.95); opacity: 0.8; }
         
@@ -145,7 +151,7 @@
         <div id="pedidos-historial" style="max-height: 250px; overflow-y: auto;">
             <ul id="lista-pedidos-historial" class="lista-datos"></ul>
         </div>
-        <button class="btn-secondary" onclick="cambiarPantalla('pantalla-portada')">Cerrar</button>
+        <button class="btn-secondary" onclick="cerrarModalEspecial()">Cerrar</button>
     </div>
 </div>
 
@@ -153,18 +159,18 @@
     const URL_EXCEL = 'https://script.google.com/macros/s/AKfycby2ZCsunSkfY6tpauggMqjuveZM0ot7ZxwwZUedi8YIHOyFr0y8clAxidVHW46XrKjj/exec';
     
     const CATALOGO = [
-        { nombre: '1 Litro', label: '🥛 1 Litro', precio: 140, color: 'btn-blanco' },
-        { nombre: '1/2 Litro', label: '🥛 1/2 Litro', precio: 70, color: 'btn-blanco' },
-        { nombre: 'Vasija 2 Lit', label: '🏺 V 2Lit', precio: 280, color: 'btn-gris' },
-        { nombre: 'Vasija 1/2 Lit', label: '🏺 V 1/2 Lit', precio: 70, color: 'btn-gris' },
-        { nombre: 'Vasija $200', label: '🏺 V $200', precio: 200, color: 'btn-gris' },
-        { nombre: 'Vasija $300', label: '🏺 V $300', precio: 300, color: 'btn-gris' },
-        { nombre: 'Vasija 1 Lit', label: '🏺 V 1 Lit', precio: 140, color: 'btn-gris' },
-        { nombre: 'Pezuña', label: '🍖 $35', precio: 35, color: 'btn-amarillo' },
-        { nombre: 'Hueso Ch', label: '🦴 Ch', precio: 25, color: 'btn-amarillo' },
-        { nombre: 'Hueso Gdo', label: '🦴 Gdo', precio: 35, color: 'btn-amarillo' },
-        { nombre: 'Caldo 1/2', label: '🥣 Caldo 1/2', precio: 25, color: 'btn-gris' },
-        { nombre: 'Caldo 1 Lit', label: '🥣 Caldo 1 Lit', precio: 45, color: 'btn-gris' }
+        { nombre: '1 Litro', label: '🥛 1 Litro', precio: 140, color: 'btn-rojo-menudo' },
+        { nombre: '1/2 Litro', label: '🥛 1/2 Litro', precio: 70, color: 'btn-rojo-menudo' },
+        { nombre: 'Vasija 2 Lit', label: '🏺 V 2Lit', precio: 280, color: 'btn-gris-perla' },
+        { nombre: 'Vasija 1/2 Lit', label: '🏺 V 1/2 Lit', precio: 70, color: 'btn-gris-perla' },
+        { nombre: 'Vasija $200', label: '🏺 V $200', precio: 200, color: 'btn-gris-perla' },
+        { nombre: 'Vasija $300', label: '🏺 V $300', precio: 300, color: 'btn-gris-perla' },
+        { nombre: 'Vasija 1 Lit', label: '🏺 V 1 Lit', precio: 140, color: 'btn-gris-perla' },
+        { nombre: 'Pezuña', label: '🍖 $35', precio: 35, color: 'btn-beige-hueso' },
+        { nombre: 'Hueso Ch', label: '🦴 Ch', precio: 25, color: 'btn-beige-hueso' },
+        { nombre: 'Hueso Gdo', label: '🦴 Gdo', precio: 35, color: 'btn-beige-hueso' },
+        { nombre: 'Caldo 1/2', label: '🥣 Caldo 1/2', precio: 25, color: 'btn-gris-perla' },
+        { nombre: 'Caldo 1 Lit', label: '🥣 Caldo 1 Lit', precio: 45, color: 'btn-gris-perla' }
     ];
 
     let db = JSON.parse(localStorage.getItem('menudo_db')) || [];
